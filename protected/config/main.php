@@ -53,7 +53,7 @@ return array(
 		'mongodb' => array(
 				'class'            => 'EMongoDB', //主文件
 				'connectionString' => 'mongodb://127.0.0.1:27017', //服务器地址
-				'dbName'           => 'test',//数据库名称
+				'dbName'           => 'umbrella',//数据库名称
 				'fsyncFlag'        => true, //mongodb的确保所有写入到数据库的安全存储到磁盘
 				'safeFlag'         => true, //mongodb的等待检索的所有写操作的状态，并检查
 				'useCursor'        => false,

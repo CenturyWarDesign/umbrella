@@ -79,20 +79,19 @@ class WxController extends Controller
 			return false;
 		}
 	}
-	// Uncomment the following methods and override them if needed
-	/*
+
 	public function filters()
 	{
 		// return the filter configuration for this controller, e.g.:
-		return array(
-			'inlineFilterName',
-			array(
-				'class'=>'path.to.FilterClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
+		return array('LogRequest');
 	}
-
+	
+	public function filterLogRequest($filterChain) {
+		Yii::log ( CVarDumper::dumpAsString ( $_REQUEST ), 'trace', 'API_RAW_REQUEST' );
+		$filterChain->run();
+	}
+	// Uncomment the following methods and override them if needed
+	/*
 	public function actions()
 	{
 		// return external action classes, e.g.:
