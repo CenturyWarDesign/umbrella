@@ -14,15 +14,15 @@ class m150721_085100_umb_user extends CDbMigration
 					'x' => 'float',
 					'y' => 'float',
 					'locate' => 'varchar(100)',
-					'create_at' => 'timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP',
-					'update_at' => 'timestamp NOT NULL DEFAULT "0000-00-00 00:00:00"',
+					'status' => 'int',
+					'create_at' => 'timestamp',
+					'update_at' => 'timestamp',
 				));
 	}
 
 	public function down()
 	{
 		$this->dropTable('umb_user');
-		return false;
 	}
 
 	/*

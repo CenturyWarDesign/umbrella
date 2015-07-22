@@ -4,6 +4,6 @@ class wx_vaild extends baseDebug {
 	public $actionurl='index.php/wx';
 }
 $debug = new wx_vaild ();
-$debug->debugDo ('text','hello');
+$debug->debugDo ('event','subscribe');
 
 // echo time();

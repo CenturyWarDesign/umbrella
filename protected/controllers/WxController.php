@@ -17,6 +17,35 @@ class WxController extends Controller {
 			exit ();
 		}
 	}
+	protected function messageText(){
+		
+	}
+	protected function messageEvent($postObj){
+		$event = $postObj->Event;
+		switch ($event){
+			case 'subscribe':
+				$user=UmbUser::model ()->findByAttributes ( array ('udid' => $postObj->FromUserName ) );
+				if (! $user) {
+					$user = new UmbUser ();
+					$user->udid = $postObj->FromUserName;
+					$user->create_at=$this->getTime();
+					$user->status = 1;
+					$user->save();
+				}
+				$this->returnText ( 'love,love', $postObj );
+				break;
+			case 'unsubscribe' :
+				$user=UmbUser::model ()->findByAttributes(array('udid'=>$postObj->FromUserName));
+				if($user){
+					$user->status=0;
+					$user->update_at=$this->getTime();
+					$user->save();
+				}
+				$this->returnText ( 'dont,love,love', $postObj );
+				break;
+		}
+	}
+	
 	public function responseMsg() {
 		// get post data, May be due to the different environments
 		// $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
@@ -24,33 +53,36 @@ class WxController extends Controller {
 		$postStr = $GLOBALS ["HTTP_RAW_POST_DATA"];
 		// extract post data
 		if (! empty ( $postStr )) {
-			
 			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
-			$fromUsername = $postObj->FromUserName;
-			$toUsername = $postObj->ToUserName;
-			$keyword = trim ( $postObj->Content );
+			$messagetype = $postObj->MsgType;
 			$time = time ();
-			$textTpl = "<xml>
-			<ToUserName><![CDATA[%s]]></ToUserName>
-			<FromUserName><![CDATA[%s]]></FromUserName>
-			<CreateTime>%s</CreateTime>
-			<MsgType><![CDATA[%s]]></MsgType>
-			<Content><![CDATA[%s]]></Content>
-			<FuncFlag>0</FuncFlag>
-			</xml>";
-			if (! empty ( $keyword )) {
-				$msgType = "text";
-				$contentStr = "Welcome to wechat world!";
-				$resultStr = sprintf ( $textTpl, $fromUsername, $toUsername, $time, $msgType, $contentStr );
-				echo $resultStr;
-			} else {
-				echo "Input something...";
+			if($messagetype=='text'){
+				$this->returnText('I love you',$postObj);
+			}else if($messagetype=='event'){
+				$this->messageEvent($postObj);
 			}
 		} else {
 			echo "";
 			exit ();
 		}
 	}
+	
+	private function returnText($contentStr='Welcome to wechat world!',$postObj){
+		$fromUsername = $postObj->FromUserName;
+		$toUsername = $postObj->ToUserName;
+		$textTpl = "<xml>
+		<ToUserName><![CDATA[%s]]></ToUserName>
+		<FromUserName><![CDATA[%s]]></FromUserName>
+		<CreateTime>%s</CreateTime>
+		<MsgType><![CDATA[%s]]></MsgType>
+		<Content><![CDATA[%s]]></Content>
+		<FuncFlag>0</FuncFlag>
+		</xml>";
+		$time = time ();
+		$resultStr = sprintf ( $textTpl, $fromUsername, $toUsername, $time, "text", $contentStr );
+		echo $resultStr;
+	}
+	
 	private function checkSignature() {
 		$signature = $_GET ["signature"];
 		$timestamp = $_GET ["timestamp"];

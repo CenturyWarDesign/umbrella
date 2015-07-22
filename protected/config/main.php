@@ -69,6 +69,12 @@ return array(
 				array(
 					'class'=>'CFileLogRoute',
 					'levels'=>'error, warning',
+					'categories'=>'system.*',
+				),
+				array (
+						'class' => 'CFileLogRoute',
+						'levels' => 'trace',
+						'logFile' => 'trace.log',
 				),
 				// uncomment the following to show log messages on web pages
 				/*

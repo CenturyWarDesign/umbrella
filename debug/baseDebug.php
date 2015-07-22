@@ -4,25 +4,20 @@ require_once $basepath . '/protected/components/Curl.php';
 require_once $basepath . '/protected/components/CryptAES.php';
 
 define ( "TOKEN", "dLneoDa897Dn2Ac" );
-defined ( 'DEBUG_URL_PATH' ) or define ( 'DEBUG_URL_PATH', '127.0.0.1' );
 class baseDebug {
-	protected $baseurl = "http://127.0.0.1/";
+	protected $baseurl = "http://127.0.0.1:4000/";
 	protected $actionurl = '';
 	protected $curl = NULL;
-	public function __construct() {
-		if (defined ( DEBUG_URL_PATH )) {
-			$this->baseurl = DEBUG_URL_PATH;
+	protected $udid='';
+	public function __construct($udid='') {
+		if(!empty($udid)){
+			$this->udid=$udid;
 		}
-		echo $this->baseurl . "<br/>";
+		echo $this->baseurl . $this->actionurl. "<br/>";
 	}
-	public function debugDo() {
+	public function debugDo($type,$content) {
 		$url = $this->baseurl . $this->actionurl;
-		// $url="https://www.googleapis.com/auth/plus.login";
-		// $url="https://www.googleapis.com/plus/v1/people/me";
-		
-		$xmlstring = "<?xml version='1.0' encoding='UTF-8'?><group><name>张三</name><age>22</age></group>";
-		
-		$a = new WinXinPost ( "text", $url, 11111 );
+		$a = new WinXinPost ( $type, $url, $content,$this->udid );
 		echo $a->result ();
 	}
 	public function vaild() {
@@ -63,65 +58,12 @@ class baseDebug {
 	protected function getFunctionParams() {
 		return $this->getBaseParams ();
 	}
-	protected function getSec($ret) {
-		$temstr = urlencode ( json_encode ( $ret ) );
-		$aes = new CryptAES ();
-		$sha1_res = sha1 ( $temstr . "bf2eee982aa6e50c1d98823ba6fc134b" );
-		$hex_res = self::hexSha1 ( $sha1_res );
-		
-		$temret = array (
-				'data' => $temstr,
-				'sign' => $hex_res 
-		);
-		$request = base64_encode ( $aes->encrypt ( json_encode ( $temret ) ) );
-		return $request;
-	}
-	public function getGooglePlus() {
-		return array (
-				'access_token' => 'ya29.cAEhbsho80cANV1N_UXPiBU59K5j5t965Bk-GHiMRrotsM-VS2N5RaaQloG1gTij7xXRvdf0iBBL0w' 
-		);
-	}
-	
-	/**
-	 * 对sha1结果进行加密，生成新的签名
-	 * 
-	 * @param
-	 *        	sha1 string
-	 * @return hex result
-	 */
-	private static $hexDigits = array (
-			'0',
-			'1',
-			'2',
-			'3',
-			'4',
-			'5',
-			'6',
-			'7',
-			'8',
-			'9',
-			'a',
-			'b',
-			'c',
-			'd',
-			'e',
-			'f' 
-	);
-	private static $mixStr = '99ed0f252347ee7aa130736b0e95b0da87942f68';
-	public static function hexSha1($sha1Res) {
-		$res = '';
-		
-		for($i = 0; $i < strlen ( $sha1Res ); $i ++) {
-			$res = $res . self::$hexDigits [hexdec ( $sha1Res [$i] ) ^ hexdec ( self::$mixStr [$i] )];
-		}
-		
-		return $res;
-	}
 }
 class WinXinPost {
 	private $event = "";
 	private $content = "";
 	private $time;
+	private $udid='';
 	
 	/*
 	 * 使用严格遵守微信公众平台参数配置http://mp.weixin.qq.com/wiki/index.php?title=消息接口指南
@@ -130,11 +72,12 @@ class WinXinPost {
 	 * <Scale>20</Scale> <Label><![CDATA[位置信息]]></Label>
 	 * array('1.29290','12.0998','20','位置信息');
 	 */
-	public function __construct($event, $url, $content) {
+	public function __construct($event, $url, $content,$udid='') {
 		$this->event = $event;
 		$this->url = $url;
 		$this->content = $content;
 		$this->time = time ();
+		$this->udid=$udid;
 	}
 	
 	// 返回接收的消息
@@ -149,14 +92,17 @@ class WinXinPost {
 	
 	// 处理成xml数据
 	private function xml_data() {
+		$messageid=uniqid('wx');
+		$username=empty($this->udid)?uniqid('um'):$this->udid;
+		$tousername='gh_a9ad9a3d19c0';
 		$str = "
 		<xml>
-		<ToUserName>100012</ToUserName>
-		<FromUserName>100012</FromUserName>
+		<ToUserName>{$tousername}</ToUserName>
+		<FromUserName>{$username}</FromUserName>
 		<CreateTime>{$this->time}</CreateTime>
 		<MsgType>{$this->event}</MsgType>
 		{$this->judgment()}
-		<MsgId>1234567890123456</MsgId>
+		<MsgId>{$messageid}</MsgId>
 		</xml>
 		";
 		return $str;
@@ -209,6 +155,10 @@ class WinXinPost {
 		<Scale>20</Scale>
 		<Label>{$data[3]}</Label>";
 		return $str;
+	}
+	// 事件推送
+	private function event() {
+		return "<Event>{$this->content}</Event>";
 	}
 	
 	// 根据消息类型加载相应的东西
