@@ -14,6 +14,7 @@
  * @property double $y
  * @property string $locate
  * @property integer $status
+ * @property integer $times
  * @property string $create_at
  * @property string $update_at
  */
@@ -36,7 +37,7 @@ class UmbUser extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('udid', 'required'),
-			array('status', 'numerical', 'integerOnly'=>true),
+			array('status,times', 'numerical', 'integerOnly'=>true),
 			array('x, y', 'numerical'),
 			array('udid, username, password, email', 'length', 'max'=>255),
 			array('type', 'length', 'max'=>10),
@@ -75,6 +76,7 @@ class UmbUser extends CActiveRecord
 			'y' => 'Y',
 			'locate' => 'Locate',
 			'status' => 'Status',
+			'times' => 'Times',
 			'create_at' => 'Create At',
 			'update_at' => 'Update At',
 		);
@@ -108,6 +110,7 @@ class UmbUser extends CActiveRecord
 		$criteria->compare('y',$this->y);
 		$criteria->compare('locate',$this->locate,true);
 		$criteria->compare('status',$this->status);
+		$criteria->compare('times',$this->times);
 		$criteria->compare('create_at',$this->create_at,true);
 		$criteria->compare('update_at',$this->update_at,true);
 

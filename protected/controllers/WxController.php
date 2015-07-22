@@ -29,9 +29,13 @@ class WxController extends Controller {
 					$user = new UmbUser ();
 					$user->udid = $postObj->FromUserName;
 					$user->create_at=$this->getTime();
+				}else{
 					$user->status = 1;
-					$user->save();
+					$user->times++;
 				}
+				
+				$user->save();
+				
 				$this->returnText ( 'love,love', $postObj );
 				break;
 			case 'unsubscribe' :
