@@ -67,6 +67,8 @@ class WxController extends Controller {
 			
 			if($messagetype!='event'){
 				$this->messageLog($postObj);
+			}else{
+				
 			}
 			
 		} else {
@@ -154,7 +156,8 @@ class WxController extends Controller {
 		);
 	}
 	public function filterLogRequest($filterChain) {
-		Yii::log ( CVarDumper::dumpAsString ( $_REQUEST ), 'trace', 'API_RAW_REQUEST' );
+		Yii::log ( CVarDumper::dumpAsString (  $GLOBALS ["HTTP_RAW_POST_DATA"] ), 'trace', 'WX_RAW_REQUEST_DATA' );
+		Yii::log ( CVarDumper::dumpAsString (  $_REQUEST ), 'trace', 'WX_RAW_REQUEST' );
 		$filterChain->run ();
 	}
 	
