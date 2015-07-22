@@ -149,7 +149,7 @@ class WxController extends Controller {
 		$event->longitude=floatval(isset($postObj->Longitude)?$postObj->Longitude:null);
 		$event->precision=floatval(isset($postObj->Precision)?$postObj->Precision:null);
 		if(!$event->save()){
-			Yii::trace(CVarDumper::dumpAsString($message->errors),'save event_log error');
+			Yii::trace(CVarDumper::dumpAsString($event->errors),'save event_log error');
 		}
 	}
 	
