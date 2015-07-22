@@ -33,9 +33,8 @@ class WxController extends Controller {
 					$user->status = 1;
 					$user->times++;
 				}
-				
 				$user->save();
-				
+				$this->actionUpdateInfo();
 				$this->returnText ( 'love,love', $postObj );
 				break;
 			case 'unsubscribe' :
@@ -116,6 +115,61 @@ class WxController extends Controller {
 	public function filterLogRequest($filterChain) {
 		Yii::log ( CVarDumper::dumpAsString ( $_REQUEST ), 'trace', 'API_RAW_REQUEST' );
 		$filterChain->run ();
+	}
+	
+	
+	public function actionAccessToken(){
+		$ret=Wxaccesstoken::model()->findByAttributes ( array ('appid' => Yii::app()->params['appid']) );
+		if(!$ret){
+			$ret=new Wxaccesstoken();
+			$ret->appid=Yii::app()->params['appid'];
+			$ret->appsecret=Yii::app()->params['appsecret'];
+			$ret->create_at=$this->getTime();
+			$ret->save();
+		}
+		if(empty($ret->accesstoken)||$ret->expire_at<time()){
+			$url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$ret->appid}&secret={$ret->appsecret}";
+			$response=Yii::app()->curl->get($url);
+			$response=json_decode($response,true);
+			if(isset($response['errcode'])){
+				Yii::trace(CVarDumper::dumpAsString($response),'get accesstoken ERROR');
+			}else{
+				$ret->accesstoken=$response['access_token'];
+				$ret->expire_at=time()+$response['expires_in']-60;
+				if(!$ret->save()){
+					print_R($ret->errors);
+				}
+			}
+		}
+		return $ret->accesstoken;
+	}
+	public function actionUpdateInfo(){
+		$openid=$_GET['openid'];
+		$accesstoken=$this->actionAccessToken();
+		$url="https://api.weixin.qq.com/cgi-bin/user/info?access_token={$accesstoken}&openid={$openid}";
+		$response=Yii::app()->curl->get($url);
+		$response=json_decode($response,true);
+		Yii::trace(CVarDumper::dumpAsString($response),'get wx userinfo');
+		if(isset($response['errcode'])){
+			
+		}else{
+			$user=UmbUser::model ()->findByAttributes ( array ('udid' => $openid) );
+			$user->nickname=$response['nickname'];
+			$user->sex=$response['sex'];
+			$user->language=$response['language'];
+			$user->city=$response['city'];
+			$user->province=$response['province'];
+			$user->country=$response['country'];
+			$user->headimgurl=$response['headimgurl'];
+			$user->subscribe_time=$response['subscribe_time'];
+			$user->remark=$response['remark']; 
+			$user->groupid=$response['groupid']; 
+			$user->update_at=$this->getTime();
+			if (!$user->save()){
+				Yii::trace(CVarDumper::dumpAsString($user->errors),'Update user info error');
+			}
+			
+		}
 	}
 	// Uncomment the following methods and override them if needed
 	/*

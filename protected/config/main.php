@@ -36,7 +36,9 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
-
+		'curl' => array (
+				'class' => 'ext.Curl'
+		),
 		// uncomment the following to enable URLs in path-format
 		'urlManager'=>array(
 			'urlFormat'=>'path',
@@ -93,5 +95,7 @@ return array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
 		'wxvaild'=>false,
+		'appid'=>'wxf6de13c469cfd0f0',
+		'appsecret'=>'137bac8913e64a3d1b2a3597f9a4bf0b',
 	),
 );

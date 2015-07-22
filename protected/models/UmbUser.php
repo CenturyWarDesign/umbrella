@@ -14,9 +14,19 @@
  * @property double $y
  * @property string $locate
  * @property integer $status
- * @property integer $times
  * @property string $create_at
  * @property string $update_at
+ * @property integer $times
+ * @property string $nickname
+ * @property integer $sex
+ * @property string $language
+ * @property string $city
+ * @property string $province
+ * @property string $country
+ * @property string $headimgurl
+ * @property string $remark
+ * @property integer $subscribe_time
+ * @property integer $groupid
  */
 class UmbUser extends CActiveRecord
 {
@@ -36,16 +46,19 @@ class UmbUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('udid', 'required'),
-			array('status,times', 'numerical', 'integerOnly'=>true),
+			array('udid, create_at', 'required'),
+			array('status, times, sex, subscribe_time, groupid', 'numerical', 'integerOnly'=>true),
 			array('x, y', 'numerical'),
 			array('udid, username, password, email', 'length', 'max'=>255),
 			array('type', 'length', 'max'=>10),
-			array('locate', 'length', 'max'=>100),
+			array('locate, remark', 'length', 'max'=>100),
+			array('nickname', 'length', 'max'=>50),
+			array('language, city, province, country', 'length', 'max'=>20),
+			array('headimgurl', 'length', 'max'=>200),
 			array('update_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, udid, username, password, email, type, x, y, locate, status, create_at, update_at', 'safe', 'on'=>'search'),
+			array('id, udid, username, password, email, type, x, y, locate, status, create_at, update_at, times, nickname, sex, language, city, province, country, headimgurl, remark, subscribe_time, groupid', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,9 +89,19 @@ class UmbUser extends CActiveRecord
 			'y' => 'Y',
 			'locate' => 'Locate',
 			'status' => 'Status',
-			'times' => 'Times',
 			'create_at' => 'Create At',
 			'update_at' => 'Update At',
+			'times' => 'Times',
+			'nickname' => 'Nickname',
+			'sex' => 'Sex',
+			'language' => 'Language',
+			'city' => 'City',
+			'province' => 'Province',
+			'country' => 'Country',
+			'headimgurl' => 'Headimgurl',
+			'remark' => 'Remark',
+			'subscribe_time' => 'Subscribe Time',
+			'groupid' => 'Groupid',
 		);
 	}
 
@@ -110,9 +133,19 @@ class UmbUser extends CActiveRecord
 		$criteria->compare('y',$this->y);
 		$criteria->compare('locate',$this->locate,true);
 		$criteria->compare('status',$this->status);
-		$criteria->compare('times',$this->times);
 		$criteria->compare('create_at',$this->create_at,true);
 		$criteria->compare('update_at',$this->update_at,true);
+		$criteria->compare('times',$this->times);
+		$criteria->compare('nickname',$this->nickname,true);
+		$criteria->compare('sex',$this->sex);
+		$criteria->compare('language',$this->language,true);
+		$criteria->compare('city',$this->city,true);
+		$criteria->compare('province',$this->province,true);
+		$criteria->compare('country',$this->country,true);
+		$criteria->compare('headimgurl',$this->headimgurl,true);
+		$criteria->compare('remark',$this->remark,true);
+		$criteria->compare('subscribe_time',$this->subscribe_time);
+		$criteria->compare('groupid',$this->groupid);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

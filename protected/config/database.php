@@ -2,11 +2,12 @@
 
 // This is the database connection configuration.
 return array(
-// 	'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-	// uncomment the following lines to use a MySQL database
-	'connectionString' => 'mysql:host=localhost;dbname=umbrella',
 	'emulatePrepare' => true,
+	'charset' => 'utf8',
+	'connectionString' => 'mysql:host=localhost;dbname=umbrella',
 	'username' => 'root',
 	'password' => '',
-	'charset' => 'utf8',
+// 	'connectionString' => 'mysql:host=123.57.8.109;dbname=umbrella',
+// 	'username' => 'wanbin',
+// 	'password' => '8K.ne8lKjc12',
 );
