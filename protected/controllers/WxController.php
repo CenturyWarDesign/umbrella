@@ -34,7 +34,7 @@ class WxController extends Controller {
 					$user->times++;
 				}
 				$user->save();
-				$this->actionUpdateInfo();
+				$this->updateInfo($postObj->FromUserName);
 				$this->returnText ( 'love,love', $postObj );
 				break;
 			case 'unsubscribe' :
@@ -143,8 +143,7 @@ class WxController extends Controller {
 		}
 		return $ret->accesstoken;
 	}
-	public function actionUpdateInfo(){
-		$openid=$_GET['openid'];
+	public function updateInfo($openid){
 		$accesstoken=$this->actionAccessToken();
 		$url="https://api.weixin.qq.com/cgi-bin/user/info?access_token={$accesstoken}&openid={$openid}";
 		$response=Yii::app()->curl->get($url);
