@@ -6,7 +6,11 @@ class WxController extends Controller {
 		if (Yii::app ()->params ['wxvaild']) {
 			$this->valid ();
 		} else {
-			$this->responseMsg ();
+			if ($this->checkSignature ()){
+				$this->responseMsg ();
+			}else{
+				Yii::app()->end();
+			}
 		}
 	}
 	public function valid() {
@@ -45,6 +49,28 @@ class WxController extends Controller {
 					$user->save();
 				}
 				$this->returnText ( 'dont,love,love', $postObj );
+				break;
+			case 'LOCATION' :
+				$user=User::model ()->findByAttributes(array('udid'=>$postObj->FromUserName));
+				if($user){
+					$user->x=floatval($postObj->Latitude);
+					$user->y=floatval($postObj->Longitude);
+					$user->locate=floatval($postObj->Precision);
+					$user->update_at=$this->getTime();
+					$user->save();
+				}
+				$this->returnText ( 'get x,y', $postObj );
+				break;
+			case 'CLICK' :
+				$user=User::model ()->findByAttributes(array('udid'=>$postObj->FromUserName));
+				if($user){
+					$user->x=floatval($postObj->Latitude);
+					$user->y=floatval($postObj->Longitude);
+					$user->locate=floatval($postObj->Precision);
+					$user->update_at=$this->getTime();
+					$user->save();
+				}
+				$this->returnText ( 'get x,y', $postObj );
 				break;
 		}
 	}
