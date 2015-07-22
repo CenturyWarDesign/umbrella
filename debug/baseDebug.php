@@ -1,5 +1,6 @@
 <?php
 $basepath = dirname ( __FILE__ ) . "/../";
+require_once $basepath . 'local.php';
 require_once $basepath . '/protected/components/Curl.php';
 require_once $basepath . '/protected/components/CryptAES.php';
 
@@ -12,6 +13,10 @@ class baseDebug {
 	public function __construct($udid='') {
 		if(!empty($udid)){
 			$this->udid=$udid;
+		}
+		if(SERVER_NAME=='mac'){
+			$this->baseurl='http://127.0.0.1';
+			$this->actionurl=str_replace("index.php", "",  $this->actionurl);
 		}
 		echo $this->baseurl . $this->actionurl. "<br/>";
 	}

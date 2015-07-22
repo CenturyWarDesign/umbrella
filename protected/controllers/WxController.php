@@ -56,7 +56,6 @@ class WxController extends Controller {
 		$postStr = $GLOBALS ["HTTP_RAW_POST_DATA"];
 		// extract post data
 		if (! empty ( $postStr )) {
-			$userid=$this->getuserid($postObj->FromUserName);
 			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 			$messagetype = $postObj->MsgType;
 			$time = time ();
@@ -67,7 +66,7 @@ class WxController extends Controller {
 			}
 			
 			if($messagetype!='event'){
-				$this->messageLog($userid,$postObj);
+				$this->messageLog($postObj);
 			}
 			
 		} else {
@@ -77,21 +76,25 @@ class WxController extends Controller {
 	}
 	//以后要放入缓存中
 	public function getuserid($openid){
-		if(empty($openid)){
-			return '';
+		if (! empty ( $openid )) {
+			$user = User::model ()->get_id ()->findByAttributes ( array (
+					'udid' => $openid 
+			) );
+			if ($user) {
+				return $user->id;
+			}
 		}
-		$user=User::model ()->get_id()->findByAttributes ( array ('udid' =>$openid) );
-		return $user->id;
+		return "";
 	}
 	
-	private function messageLog($userid,$postObj){
+	private function messageLog($postObj){
 		$message=new MessageLog();
-		$message->user_id=$userid;
-		$message->createtime=$postObj->CreateTime;
+		$message->openid=$postObj->FromUserName;
+		$message->createtime=intval($postObj->CreateTime);
 		$message->msgtype=$postObj->MsgType;
 		$message->msgid=$postObj->MsgId;
 		$message->content=isset($postObj->Content)?$postObj->Content:'';
-		$message->pciurl=isset($postObj->PicUrl)?$postObj->PicUrl:'';
+		$message->picurl=isset($postObj->PicUrl)?$postObj->PicUrl:'';
 		$message->mediaid=isset($postObj->MediaId)?$postObj->MediaId:'';
 		$message->format=isset($postObj->Format)?$postObj->Format:'';
 		$message->recognition=isset($postObj->Recognition)?$postObj->Recognition:'';
@@ -103,7 +106,9 @@ class WxController extends Controller {
 		$message->title=isset($postObj->Title)?$postObj->Title:'';
 		$message->description=isset($postObj->Description)?$postObj->Description:'';
 		$message->url=isset($postObj->Url)?$postObj->Url:'';
-		$message->save();
+		if(!$message->save()){
+			Yii::trace(CVarDumper::dumpAsString($message->errors),'save message_log error');
+		}
 	}
 	
 	private function returnText($contentStr='Welcome to wechat world!',$postObj){

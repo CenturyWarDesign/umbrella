@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Asia/Shanghai');
 // This is the configuration for yiic console application.
 // Any writable CConsoleApplication properties can be configured here.
 return array(

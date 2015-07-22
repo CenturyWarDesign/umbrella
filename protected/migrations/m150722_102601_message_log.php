@@ -6,12 +6,12 @@ class m150722_102601_message_log extends CDbMigration
 	{
 			$this->createTable("umb_message_log", array(
 				'id' => 'pk',
-				'user_id' => 'int',
+				'openid' => 'varchar(50)',
 				'createtime' => 'int',
 				'msgtype' => 'char(10)',
 				'content' => 'string',
 				'msgid' => 'BIGINT',
-				'pciurl' => 'varchar(200)',
+				'picurl' => 'varchar(200)',
 				'mediaid' => 'varchar(200)',
 				'format' => 'char(10)',
 				'recognition' => 'string',

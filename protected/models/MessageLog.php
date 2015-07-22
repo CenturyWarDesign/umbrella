@@ -5,13 +5,13 @@
  *
  * The followings are the available columns in table 'umb_message_log':
  * @property integer $id
- * @property integer $user_id
+ * @property string $openid
  * @property integer $createtime
  * @property string $msgtype
  * @property string $content
  * @property string $msgid
- * @property string $PicUrl
- * @property string $MediaId
+ * @property string $picurl
+ * @property string $mediaid
  * @property string $format
  * @property string $recognition
  * @property string $thumbmediaid
@@ -19,6 +19,9 @@
  * @property double $location_y
  * @property double $scale
  * @property string $lable
+ * @property string $title
+ * @property string $description
+ * @property string $url
  */
 class MessageLog extends CActiveRecord
 {
@@ -38,15 +41,16 @@ class MessageLog extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, createtime', 'numerical', 'integerOnly'=>true),
+			array('createtime', 'numerical', 'integerOnly'=>true),
 			array('location_x, location_y, scale', 'numerical'),
+			array('openid', 'length', 'max'=>50),
 			array('msgtype, format', 'length', 'max'=>10),
 			array('content, recognition', 'length', 'max'=>255),
 			array('msgid', 'length', 'max'=>20),
-			array('PicUrl, MediaId, thumbmediaid, lable', 'length', 'max'=>200),
+			array('picurl, mediaid, thumbmediaid, lable, title, description, url', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, createtime, msgtype, content, msgid, PicUrl, MediaId, format, recognition, thumbmediaid, location_x, location_y, scale, lable', 'safe', 'on'=>'search'),
+			array('id, openid, createtime, msgtype, content, msgid, picurl, mediaid, format, recognition, thumbmediaid, location_x, location_y, scale, lable, title, description, url', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,13 +72,13 @@ class MessageLog extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'user_id' => 'User',
+			'openid' => 'Openid',
 			'createtime' => 'Createtime',
 			'msgtype' => 'Msgtype',
 			'content' => 'Content',
 			'msgid' => 'Msgid',
-			'PicUrl' => 'Pic Url',
-			'MediaId' => 'Media',
+			'picurl' => 'Picurl',
+			'mediaid' => 'Mediaid',
 			'format' => 'Format',
 			'recognition' => 'Recognition',
 			'thumbmediaid' => 'Thumbmediaid',
@@ -82,6 +86,9 @@ class MessageLog extends CActiveRecord
 			'location_y' => 'Location Y',
 			'scale' => 'Scale',
 			'lable' => 'Lable',
+			'title' => 'Title',
+			'description' => 'Description',
+			'url' => 'Url',
 		);
 	}
 
@@ -104,13 +111,13 @@ class MessageLog extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('user_id',$this->user_id);
+		$criteria->compare('openid',$this->openid,true);
 		$criteria->compare('createtime',$this->createtime);
 		$criteria->compare('msgtype',$this->msgtype,true);
 		$criteria->compare('content',$this->content,true);
 		$criteria->compare('msgid',$this->msgid,true);
-		$criteria->compare('PicUrl',$this->PicUrl,true);
-		$criteria->compare('MediaId',$this->MediaId,true);
+		$criteria->compare('picurl',$this->picurl,true);
+		$criteria->compare('mediaid',$this->mediaid,true);
 		$criteria->compare('format',$this->format,true);
 		$criteria->compare('recognition',$this->recognition,true);
 		$criteria->compare('thumbmediaid',$this->thumbmediaid,true);
@@ -118,6 +125,9 @@ class MessageLog extends CActiveRecord
 		$criteria->compare('location_y',$this->location_y);
 		$criteria->compare('scale',$this->scale);
 		$criteria->compare('lable',$this->lable,true);
+		$criteria->compare('title',$this->title,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('url',$this->url,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
