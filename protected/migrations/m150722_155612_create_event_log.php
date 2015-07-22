@@ -8,7 +8,7 @@ class m150722_155612_create_event_log extends CDbMigration
 				'id' => 'pk',
 				'openid' => 'varchar(50)',
 				'createtime' => 'int',
-				'event' => 'char(10)',
+				'event' => 'varchar(20)',
 				'eventkey' => 'varchar(200)',
 				'ticket' => 'varchar(200)',
 				'latitude' => 'float',
