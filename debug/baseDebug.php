@@ -87,6 +87,7 @@ class WinXinPost {
 	
 	// 返回接收的消息
 	public function result() {
+		echo $this->post();
 		$postObj = simplexml_load_string ( $this->post (), 'SimpleXMLElement', LIBXML_NOCDATA );
 		$str='';
 		foreach ( ( array ) $postObj as $key => $value ) {

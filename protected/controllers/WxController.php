@@ -94,7 +94,7 @@ class WxController extends Controller {
 			if($messagetype!='event'){
 				$this->messageLog($postObj);
 			}else{
-				
+				$this->eventLog($postObj);
 			}
 			
 		} else {
@@ -138,6 +138,20 @@ class WxController extends Controller {
 			Yii::trace(CVarDumper::dumpAsString($message->errors),'save message_log error');
 		}
 	}
+	private function eventLog($postObj){
+		$event=new EventLog();
+		$event->openid=$postObj->FromUserName;
+		$event->createtime=intval($postObj->CreateTime);
+		$event->event=$postObj->Event;
+		$event->eventkey=isset($postObj->EventKey)?$postObj->EventKey:'';
+		$event->ticket=isset($postObj->Ticket)?$postObj->Ticket:'';
+		$event->latitude=floatval(isset($postObj->Latitude)?$postObj->Latitude:null);
+		$event->longitude=floatval(isset($postObj->Longitude)?$postObj->Longitude:null);
+		$event->precision=floatval(isset($postObj->Precision)?$postObj->Precision:null);
+		if(!$event->save()){
+			Yii::trace(CVarDumper::dumpAsString($message->errors),'save event_log error');
+		}
+	}
 	
 	private function returnText($contentStr='Welcome to wechat world!',$postObj){
 		$fromUsername = $postObj->FromUserName;
@@ -156,6 +170,9 @@ class WxController extends Controller {
 	}
 	
 	private function checkSignature() {
+		if(SERVER_NAME=='mac'){
+			return true;
+		}
 		$signature = $_GET ["signature"];
 		$timestamp = $_GET ["timestamp"];
 		$nonce = $_GET ["nonce"];
