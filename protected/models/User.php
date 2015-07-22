@@ -28,7 +28,7 @@
  * @property integer $subscribe_time
  * @property integer $groupid
  */
-class UmbUser extends CActiveRecord
+class User extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
@@ -151,7 +151,14 @@ class UmbUser extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-
+	public function scopes()
+	{
+		return array(
+				'get_id'=>array(
+						'select' => 'id',
+				)
+		);
+	}
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

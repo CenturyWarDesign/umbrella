@@ -11,7 +11,7 @@ class m150722_081012_umb_wx_accesstoken extends CDbMigration
 				'accesstoken' => 'string NOT NULL',
 				'create_at' => 'timestamp',
 				'expire_at' => 'int'
-		));
+		),'ENGINE=InnoDB DEFAULT CHARSET=utf8');
 		$this->createIndex('appid', "umb_wxaccesstoken", 'appid');
 		$this->insert('umb_wxaccesstoken', array('appid'=>'wxf6de13c469cfd0f0','appsecret'=>'137bac8913e64a3d1b2a3597f9a4bf0b','create_at'=>date("Y-m-d H:i:s",time())));
 	}

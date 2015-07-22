@@ -17,7 +17,8 @@ class m150721_085100_umb_user extends CDbMigration
 					'status' => 'int',
 					'create_at' => 'timestamp',
 					'update_at' => 'timestamp',
-				));
+				),
+				'ENGINE=InnoDB DEFAULT CHARSET=utf8');
 	}
 
 	public function down()

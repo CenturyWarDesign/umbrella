@@ -24,9 +24,9 @@ class WxController extends Controller {
 		$event = $postObj->Event;
 		switch ($event){
 			case 'subscribe':
-				$user=UmbUser::model ()->findByAttributes ( array ('udid' => $postObj->FromUserName ) );
+				$user=User::model ()->findByAttributes ( array ('udid' => $postObj->FromUserName ) );
 				if (! $user) {
-					$user = new UmbUser ();
+					$user = new User ();
 					$user->udid = $postObj->FromUserName;
 					$user->create_at=$this->getTime();
 				}else{
@@ -38,7 +38,7 @@ class WxController extends Controller {
 				$this->returnText ( 'love,love', $postObj );
 				break;
 			case 'unsubscribe' :
-				$user=UmbUser::model ()->findByAttributes(array('udid'=>$postObj->FromUserName));
+				$user=User::model ()->findByAttributes(array('udid'=>$postObj->FromUserName));
 				if($user){
 					$user->status=0;
 					$user->update_at=$this->getTime();
@@ -56,6 +56,7 @@ class WxController extends Controller {
 		$postStr = $GLOBALS ["HTTP_RAW_POST_DATA"];
 		// extract post data
 		if (! empty ( $postStr )) {
+			$userid=$this->getuserid($postObj->FromUserName);
 			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 			$messagetype = $postObj->MsgType;
 			$time = time ();
@@ -64,10 +65,45 @@ class WxController extends Controller {
 			}else if($messagetype=='event'){
 				$this->messageEvent($postObj);
 			}
+			
+			if($messagetype!='event'){
+				$this->messageLog($userid,$postObj);
+			}
+			
 		} else {
 			echo "";
 			exit ();
 		}
+	}
+	//以后要放入缓存中
+	public function getuserid($openid){
+		if(empty($openid)){
+			return '';
+		}
+		$user=User::model ()->get_id()->findByAttributes ( array ('udid' =>$openid) );
+		return $user->id;
+	}
+	
+	private function messageLog($userid,$postObj){
+		$message=new MessageLog();
+		$message->user_id=$userid;
+		$message->createtime=$postObj->CreateTime;
+		$message->msgtype=$postObj->MsgType;
+		$message->msgid=$postObj->MsgId;
+		$message->content=isset($postObj->Content)?$postObj->Content:'';
+		$message->pciurl=isset($postObj->PicUrl)?$postObj->PicUrl:'';
+		$message->mediaid=isset($postObj->MediaId)?$postObj->MediaId:'';
+		$message->format=isset($postObj->Format)?$postObj->Format:'';
+		$message->recognition=isset($postObj->Recognition)?$postObj->Recognition:'';
+		$message->thumbmediaid=isset($postObj->ThumbMediaId)?$postObj->ThumbMediaId:'';
+		$message->location_x=isset($postObj->Location_X)?$postObj->Location_X:'';
+		$message->location_y=isset($postObj->Location_Y)?$postObj->Location_Y:'';
+		$message->scale=isset($postObj->Scale)?$postObj->Scale:'';
+		$message->lable=isset($postObj->Label)?$postObj->Label:'';
+		$message->title=isset($postObj->Title)?$postObj->Title:'';
+		$message->description=isset($postObj->Description)?$postObj->Description:'';
+		$message->url=isset($postObj->Url)?$postObj->Url:'';
+		$message->save();
 	}
 	
 	private function returnText($contentStr='Welcome to wechat world!',$postObj){
@@ -118,7 +154,7 @@ class WxController extends Controller {
 	}
 	
 	
-	public function actionAccessToken(){
+	public function actionAccessToken($get=false){
 		$ret=Wxaccesstoken::model()->findByAttributes ( array ('appid' => Yii::app()->params['appid']) );
 		if(!$ret){
 			$ret=new Wxaccesstoken();
@@ -127,7 +163,7 @@ class WxController extends Controller {
 			$ret->create_at=$this->getTime();
 			$ret->save();
 		}
-		if(empty($ret->accesstoken)||$ret->expire_at<time()){
+		if(empty($ret->accesstoken)||$ret->expire_at<time()||$get){
 			$url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$ret->appid}&secret={$ret->appsecret}";
 			$response=Yii::app()->curl->get($url);
 			$response=json_decode($response,true);
@@ -143,16 +179,20 @@ class WxController extends Controller {
 		}
 		return $ret->accesstoken;
 	}
-	public function updateInfo($openid){
+	public function updateInfo($openid,$first=true){
 		$accesstoken=$this->actionAccessToken();
 		$url="https://api.weixin.qq.com/cgi-bin/user/info?access_token={$accesstoken}&openid={$openid}";
 		$response=Yii::app()->curl->get($url);
 		$response=json_decode($response,true);
 		Yii::trace(CVarDumper::dumpAsString($response),'get wx userinfo');
 		if(isset($response['errcode'])){
-			
+			//这一块，只进行两次，避免重复出现循环调用问题
+			if ($response ['errcode'] == 40001 && $first) {
+				$this->actionAccessToken ( true );
+				$this->updateInfo ( $openid, false );
+			}
 		}else{
-			$user=UmbUser::model ()->findByAttributes ( array ('udid' => $openid) );
+			$user=User::model ()->findByAttributes ( array ('udid' => $openid) );
 			$user->nickname=$response['nickname'];
 			$user->sex=$response['sex'];
 			$user->language=$response['language'];
