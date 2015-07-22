@@ -99,9 +99,9 @@ class WxController extends Controller {
 		$message->format=isset($postObj->Format)?$postObj->Format:'';
 		$message->recognition=isset($postObj->Recognition)?$postObj->Recognition:'';
 		$message->thumbmediaid=isset($postObj->ThumbMediaId)?$postObj->ThumbMediaId:'';
-		$message->location_x=isset($postObj->Location_X)?$postObj->Location_X:'';
-		$message->location_y=isset($postObj->Location_Y)?$postObj->Location_Y:'';
-		$message->scale=isset($postObj->Scale)?$postObj->Scale:'';
+		$message->location_x= floatval(isset($postObj->Location_X)?$postObj->Location_X:null);
+		$message->location_y=floatval(isset($postObj->Location_Y)?$postObj->Location_Y:null);
+		$message->scale=floatval(isset($postObj->Scale)?$postObj->Scale:null);
 		$message->lable=isset($postObj->Label)?$postObj->Label:'';
 		$message->title=isset($postObj->Title)?$postObj->Title:'';
 		$message->description=isset($postObj->Description)?$postObj->Description:'';
