@@ -7,7 +7,7 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+	'name'=>'快伞',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -16,6 +16,7 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+		'application.controllers.*',
 		'ext.YiiMongoDbSuite.*',
 		'ext.php_AES.*',
 	),
