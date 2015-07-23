@@ -40,7 +40,7 @@ class WxController extends WxBaseController {
 					$user->times++;
 				}
 				$user->save();
-				$this->updateInfo($postObj->FromUserName);
+				WX::updateInfo($postObj->FromUserName);
 				$this->returnText ( 'love,love', $postObj );
 				break;
 			case 'unsubscribe' :
