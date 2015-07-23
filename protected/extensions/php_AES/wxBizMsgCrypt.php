@@ -2,7 +2,7 @@
 
 /**
  * 对公众平台发送给公众账号的消息加解密示例代码.
- *
+ *	由于yii不能找到，所以改了个名字
  * @copyright Copyright (c) 1998-2014 Tencent Inc.
  */
 
