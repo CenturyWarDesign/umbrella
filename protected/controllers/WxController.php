@@ -186,7 +186,6 @@ class WxController extends Controller {
 		$time = time ();
 		$resultStr = sprintf ( $textTpl, $fromUsername, $toUsername, $time, "text", $contentStr );
 		$this->retRes($resultStr);
-
 	}
 	
 	private function retRes($resultStr){
@@ -195,9 +194,9 @@ class WxController extends Controller {
 			$encryptMsg = '';
 			$errCode = $pc->encryptMsg ( $resultStr, $_GET ['timestamp'], $_GET ['nonce'], $encryptMsg );
 			if ($errCode > 0) {
-				echo $errCode;
-			} else {
 				Yii::log ( $errCode, 'error', 'WX_MESSAGE_AES_ERROR' );
+			} else {
+				echo $encryptMsg;
 			}
 		}else{
 			echo $resultStr;

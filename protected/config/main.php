@@ -17,7 +17,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'ext.YiiMongoDbSuite.*',
-		'application.extensions.php_AES.*',
+		'ext.php_AES.*',
 	),
 
 	'modules'=>array(
