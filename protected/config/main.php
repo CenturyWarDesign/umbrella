@@ -17,7 +17,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'ext.YiiMongoDbSuite.*',
-		'ext.php_AES.*',
+		'application.extensions.php_AES.*',
 	),
 
 	'modules'=>array(
@@ -76,7 +76,7 @@ return array(
 				),
 				array (
 						'class' => 'CFileLogRoute',
-						'levels' => 'trace',
+						'levels' => 'trace,error',
 						'logFile' => 'trace.log',
 				),
 				// uncomment the following to show log messages on web pages
