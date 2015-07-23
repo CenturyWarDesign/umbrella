@@ -2,6 +2,8 @@
 
 define ( "TOKEN", "dLneoDa897Dn2Ac" );
 class WxController extends Controller {
+	private $encodingAesKey='';
+	private $restype='';
 	public function actionIndex() {
 		if (Yii::app ()->params ['wxvaild']) {
 			$this->valid ();
@@ -76,11 +78,28 @@ class WxController extends Controller {
 	}
 	
 	public function responseMsg() {
-		// get post data, May be due to the different environments
-		// $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-		// var_dump($_POST);
-		$postStr = $GLOBALS ["HTTP_RAW_POST_DATA"];
-		// extract post data
+		$postStr='';
+		if(isset($_GET['encrypt_type'])&&$_GET['encrypt_type']=='aes'){
+			$pc = new WXBizMsgCrypt(TOKEN,Yii::app()->params['encodingAesKey'], Yii::app()->params['appid']);
+			$errCode = $pc->decryptMsg($_GET['msg_signature'], $_GET['timestamp'], $_GET['nonce'], $GLOBALS ["HTTP_RAW_POST_DATA"], $postStr);
+			if($errCode!=0){
+				//如果第一次解密失败，那么再试一次上一个串
+				$pc = new WXBizMsgCrypt(TOKEN,Yii::app()->params['encodingAesKey2'], Yii::app()->params['appid']);
+				$errCode = $pc->decryptMsg($_GET['msg_signature'], $_GET['timestamp'], $_GET['nonce'], $GLOBALS ["HTTP_RAW_POST_DATA"], $postStr);
+				if($errCode>0){
+					Yii::log ( $errCode, 'error', 'WX_MESSAGE_AES_ERROR' );
+					Yii::app()->end();
+				}
+				$this->encodingAesKey=Yii::app()->params['encodingAesKey2'];
+			}else{
+				$this->encodingAesKey=Yii::app()->params['encodingAesKey'];
+			}
+			$this->restype=$_GET['encrypt_type'];
+			Yii::log ( CVarDumper::dumpAsString ( $postStr ), 'trace', 'WX_MESSAGE_AES_RESPONSE' );
+		}else{
+			$postStr = $GLOBALS ["HTTP_RAW_POST_DATA"];
+		}
+		
 		if (! empty ( $postStr )) {
 			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 			$messagetype = $postObj->MsgType;
@@ -166,8 +185,25 @@ class WxController extends Controller {
 		</xml>";
 		$time = time ();
 		$resultStr = sprintf ( $textTpl, $fromUsername, $toUsername, $time, "text", $contentStr );
-		echo $resultStr;
+		$this->retRes($resultStr);
+
 	}
+	
+	private function retRes($resultStr){
+		if($this->restype=='aes'){
+			$pc = new WXBizMsgCrypt ( TOKEN, $this->encodingAesKey, Yii::app ()->params ['appid'] );
+			$encryptMsg = '';
+			$errCode = $pc->encryptMsg ( $resultStr, $_GET ['timestamp'], $_GET ['nonce'], $encryptMsg );
+			if ($errCode > 0) {
+				echo $errCode;
+			} else {
+				Yii::log ( $errCode, 'error', 'WX_MESSAGE_AES_ERROR' );
+			}
+		}else{
+			echo $resultStr;
+		}
+	}	
+	
 	
 	private function checkSignature() {
 		if(SERVER_NAME=='mac'){

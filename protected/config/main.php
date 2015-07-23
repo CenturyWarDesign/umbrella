@@ -17,6 +17,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'ext.YiiMongoDbSuite.*',
+		'ext.php_AES.wxBizMsgCrypt.php',
 	),
 
 	'modules'=>array(
@@ -97,5 +98,7 @@ return array(
 		'wxvaild'=>false,
 		'appid'=>'wxf6de13c469cfd0f0',
 		'appsecret'=>'137bac8913e64a3d1b2a3597f9a4bf0b',
+		'encodingAesKey'=>'cQ4ydiNGta7ZXosbR9JXjhK98pPMUZz3OnxhX2l0X9D',
+		'encodingAesKey2'=>'cQ4ydiNGta7ZXosbR9JXjhK98pPMUZz3OnxhX2l0X9D',
 	),
 );
