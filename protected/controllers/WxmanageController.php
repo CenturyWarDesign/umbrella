@@ -8,7 +8,10 @@ class WxmanageController extends WxBaseController
 	}
 	
 	public function actionUpdateItem(){
-		$item=array('button'=>array(array('name'=>'我要借伞','type'=>'view','url'=>'http://umbrella.centurywar.cn/borrow'),
+		$appid= Yii::app ()->params ['appid'];
+		$urlred=urlencode('http://umbrella.centurywar.cn/borrow');
+		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid={$appid}&redirect_uri={$urlred}&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
+		$item=array('button'=>array(array('name'=>'我要借伞','type'=>'view','url'=>$url),
 				array('name'=>'有奖活动','sub_button'=>array(
 						array('name'=>'推荐有奖','type'=>'view','url'=>'http://umbrella.centurywar.cn/activityrecommend'),
 						array('name'=>'快伞客','type'=>'view','url'=>'http://umbrella.centurywar.cn/activitybecome'),
