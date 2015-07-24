@@ -1,7 +1,7 @@
 <div style='padding:50px 0px'>
 <button type="button" class="btn btn-primary btn-lg btn-block" onclick='scan()'>直接扫码</button>
 <button type="button" class="btn btn-primary btn-lg btn-block" onclick='chooseimage()'>选择图片</button>
-<button type="button" class="btn btn-default btn-lg btn-block" onclick='location()'>附近网点</button>
+<button type="button" class="btn btn-default btn-lg btn-block" onclick='getlocation()'>附近网点</button>
 <script>
 function scan(){
 	wx.scanQRCode({
@@ -32,9 +32,9 @@ function chooseimage(){
 
 
 
-function location(){
+function getlocation(){
 	wx.getLocation({
-	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 	    success: function (res) {
 	        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
 	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
