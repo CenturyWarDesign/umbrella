@@ -21,7 +21,7 @@ wx.config({
     timestamp: <?php echo $this->signPackage["timestamp"];?>,
     nonceStr: '<?php echo $this->signPackage["nonceStr"];?>',
     signature: '<?php echo $this->signPackage["signature"];?>',
-    jsApiList: ['getLocation','scanQRCode','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','chooseImage','previewImage','uploadImage','downloadImage','getNetworkType','hideOptionMenu','chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    jsApiList: ['getLocation','openLocation','scanQRCode','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','chooseImage','previewImage','uploadImage','downloadImage','getNetworkType','hideOptionMenu','chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 });
 </script>
 </body>
