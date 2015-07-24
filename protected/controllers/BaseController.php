@@ -4,6 +4,8 @@ class BaseController extends Controller
 	public $signPackage='';
 	public function init()
 	{
+		Yii::log(Yii::app()->getRequest()->getPathInfo(), 'trace', 'API_RAW_REQUEST_URL');
+		
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-2.1.4.min.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/bootstrap/css/bootstrap.css');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/bootstrap/js/bootstrap.min.js');

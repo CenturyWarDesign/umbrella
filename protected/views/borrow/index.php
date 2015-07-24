@@ -52,5 +52,5 @@ function getlocation(){
 	});
 	
 }
-</script>c
+</script>
 </div>

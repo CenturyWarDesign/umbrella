@@ -36,7 +36,8 @@ class EventLog extends CActiveRecord
 			array('latitude, longitude, precision', 'numerical'),
 			array('openid', 'length', 'max'=>50),
 			array('event', 'length', 'max'=>20),
-			array('eventkey, ticket', 'length', 'max'=>200),
+			array('eventkey', 'length', 'max'=>500),
+			array('ticket', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, openid, createtime, event, eventkey, ticket, latitude, longitude, precision', 'safe', 'on'=>'search'),
