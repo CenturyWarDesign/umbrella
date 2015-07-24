@@ -2,13 +2,21 @@
 class BaseController extends Controller
 {
 	public $signPackage='';
+	public $openid='';
 	public function init()
 	{
-		Yii::log(Yii::app()->getRequest()->getPathInfo(), 'trace', 'API_RAW_REQUEST_URL');
-		
+		Yii::log(Yii::app()->getRequest()->getRequestUri(), 'trace', 'API_RAW_REQUEST_URL');
+		if(!empty($_GET['code'])&&!empty($_GET['state'])&&$_GET['state']=='wxbutton'){
+			$temopenid=WX::getUserWebOpenid($_GET['code']);
+			if(!empty($temopenid)){
+				Yii::app()->session['openid']=$this->openid;
+			}
+		}
+		$this->openid=Yii::app()->session['openid'];
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-2.1.4.min.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/bootstrap/css/bootstrap.css');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/bootstrap/js/bootstrap.min.js');
+		
 		$this->signPackage=$this->getSignPackage();
 	}
 	
@@ -45,4 +53,5 @@ class BaseController extends Controller
 		);
 		return $signPackage;
 	}
+	
 }

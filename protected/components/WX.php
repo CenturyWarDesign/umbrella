@@ -83,4 +83,42 @@ class WX {
 		
 		}
 	}
+	
+	public static function getUserWebOpenid($code){
+		$appid = Yii::app ()->params ['appid'];
+		$appsecret = Yii::app ()->params ['appsecret'];
+		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$appsecret}&code={$code}&grant_type=authorization_code";
+		Yii::trace ( $url, 'web accesstoken from code' );
+		$response = Yii::app ()->curl->get ( $url );
+		$response = json_decode ( $response, true );
+		if (isset ( $response ['errcode'] )) {
+			Yii::trace ( CVarDumper::dumpAsString ($response), 'Error Code from Web' );
+		} else {
+			Yii::trace ( CVarDumper::dumpAsString ( $response ), 'get user web openid' );
+			$openid=$response['openid'];
+			$user=User::model()->findByAttributes(array('udid'=>$openid));
+			$newuser=false;
+			if(!$user){
+				$user = new User ();
+				$user->udid = $openid;
+				$user->create_at=WX::getTime();
+				//如果是新用户，那么取下用户基本信息吧
+				$newuser=true;
+			}
+			$user->accesstoken=$response['access_token'];
+			$user->refresh_token=$response['refresh_token'];
+			$user->expires_in=time()+$response['expires_in']-200;
+			$user->token_refreshed=intval(0);
+			if(!$user->save()){
+				Yii::log ( CVarDumper::dumpAsString ($user->errors),'error', 'User Web AccessToken Save Error' );
+			}
+			if($newuser){
+				WX::updateInfo($openid);
+			}
+			return $openid;
+		}
+	}
+	public static function getTime(){
+		return date("Y-m-d H:i:s",time());
+	}
 }

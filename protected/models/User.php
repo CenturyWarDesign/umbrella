@@ -27,6 +27,10 @@
  * @property string $remark
  * @property integer $subscribe_time
  * @property integer $groupid
+ * @property string $accesstoken
+ * @property string $refresh_token
+ * @property integer $expires_in
+ * @property integer $token_refreshed
  */
 class User extends CActiveRecord
 {
@@ -47,18 +51,18 @@ class User extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('udid, create_at', 'required'),
-			array('status, times, sex, subscribe_time, groupid', 'numerical', 'integerOnly'=>true),
+			array('status, times, sex, subscribe_time, groupid, expires_in, token_refreshed', 'numerical', 'integerOnly'=>true),
 			array('x, y', 'numerical'),
 			array('udid, username, password, email', 'length', 'max'=>255),
 			array('type', 'length', 'max'=>10),
 			array('locate, remark', 'length', 'max'=>100),
 			array('nickname', 'length', 'max'=>50),
 			array('language, city, province, country', 'length', 'max'=>20),
-			array('headimgurl', 'length', 'max'=>200),
+			array('headimgurl, accesstoken, refresh_token', 'length', 'max'=>200),
 			array('update_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, udid, username, password, email, type, x, y, locate, status, create_at, update_at, times, nickname, sex, language, city, province, country, headimgurl, remark, subscribe_time, groupid', 'safe', 'on'=>'search'),
+			array('id, udid, username, password, email, type, x, y, locate, status, create_at, update_at, times, nickname, sex, language, city, province, country, headimgurl, remark, subscribe_time, groupid, accesstoken, refresh_token, expires_in, token_refreshed', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -102,6 +106,10 @@ class User extends CActiveRecord
 			'remark' => 'Remark',
 			'subscribe_time' => 'Subscribe Time',
 			'groupid' => 'Groupid',
+			'accesstoken' => 'Accesstoken',
+			'refresh_token' => 'Refresh Token',
+			'expires_in' => 'Expires In',
+			'token_refreshed' => 'Token Refreshed',
 		);
 	}
 
@@ -146,11 +154,16 @@ class User extends CActiveRecord
 		$criteria->compare('remark',$this->remark,true);
 		$criteria->compare('subscribe_time',$this->subscribe_time);
 		$criteria->compare('groupid',$this->groupid);
+		$criteria->compare('accesstoken',$this->accesstoken,true);
+		$criteria->compare('refresh_token',$this->refresh_token,true);
+		$criteria->compare('expires_in',$this->expires_in);
+		$criteria->compare('token_refreshed',$this->token_refreshed);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+
 	public function scopes()
 	{
 		return array(
@@ -159,11 +172,12 @@ class User extends CActiveRecord
 				)
 		);
 	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return UmbUser the static model class
+	 * @return User the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
