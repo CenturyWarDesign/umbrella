@@ -11,8 +11,6 @@
 	
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	
-	<script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=rodKy1ym1a848VUrDE3vqj4w&v=1.0"></script> 
-	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 </head>
 
 <body>

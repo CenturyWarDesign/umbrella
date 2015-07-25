@@ -16,6 +16,7 @@ class BaseController extends Controller
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-2.1.4.min.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/bootstrap/css/bootstrap.css');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/bootstrap/js/bootstrap.min.js');
+		Yii::app()->clientScript->registerScriptFile("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
 		
 		$this->signPackage=$this->getSignPackage();
 	}
@@ -54,4 +55,17 @@ class BaseController extends Controller
 		return $signPackage;
 	}
 	
+	public function actiongetBaiduPoint(){
+		$latitude=$_POST['x'];
+		$longitude=$_POST['y'];
+		$url = "http://api.map.baidu.com/ag/coord/convert";
+		$params=array('from'=>0,'to'=>4,'x'=>$latitude,'y'=>$longitude);
+		$response = Yii::app ()->curl->get ( $url,$params );
+		$response = json_decode ( $response, true );
+		if($response['error']===0){
+			$response['x']=base64_decode($response['x']);
+			$response['y']=base64_decode($response['y']);
+		}
+		echo json_encode($response);
+	}
 }
