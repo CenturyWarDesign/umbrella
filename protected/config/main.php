@@ -102,5 +102,7 @@ return array(
 		'appsecret'=>'137bac8913e64a3d1b2a3597f9a4bf0b',
 		'encodingAesKey'=>'cQ4ydiNGta7ZXosbR9JXjhK98pPMUZz3OnxhX2l0X9D',
 		'encodingAesKey2'=>'cQ4ydiNGta7ZXosbR9JXjhK98pPMUZz3OnxhX2l0X9D',
+		'map_center_latitude'=>116.404,
+		'map_center_longitude'=>39.915,
 	),
 );

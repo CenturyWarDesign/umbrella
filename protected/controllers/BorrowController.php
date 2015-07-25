@@ -8,6 +8,9 @@ class BorrowController extends BaseController
 		$this->render('index');
 	}
 
+	public function actionNearby(){
+		$this->render('nearby');
+	}
 	// Uncomment the following methods and override them if needed
 	/*
 	public function filters()
