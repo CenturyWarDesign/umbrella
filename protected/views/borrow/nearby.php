@@ -18,11 +18,6 @@ var scaleControl=new BMap.ScaleControl();
 map.addControl(scaleControl);//添加比例尺控件  
 map.centerAndZoom(new BMap.Point(<?php echo Yii::app()->params['map_center_latitude']?>, <?php echo Yii::app()->params['map_center_longitude']?>), 16); 
 
-map.addEventListener("moveend", function(){      
-      var center = map.getCenter();      
-});
-
-
 wx.ready(function(){
 	wx.getLocation({
 	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
@@ -31,13 +26,14 @@ wx.ready(function(){
 	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
 	        var speed = res.speed; // 速度，以米/每秒计
 	        var accuracy = res.accuracy; // 位置精度
+	        $.post("getBaiduPoint",{from:1,to:3,x:longitude,y:latitude},function(result){
+	        	map.panTo(new BMap.Point(result.x,result.y), 14);  
+	        },"json");
 	    }
 	});
 });
 
-$.post("getBaiduPoint",{from:2,to:4,x:116.3614,y:39.979},function(result){
-	map.panTo(new BMap.Point(result.x,result.y), 14);  
-},"json");
+
 
 
 </script>
