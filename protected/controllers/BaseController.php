@@ -43,7 +43,7 @@ class BaseController extends Controller
 		$signature = sha1($string);
 	
 		$signPackage = array(
-				"appId"     => Yii::app()->params['appid'],
+				"appId"     => APP_ID,
 				"nonceStr"  => $nonceStr,
 				"timestamp" => $timestamp,
 				"url"       => $url,
