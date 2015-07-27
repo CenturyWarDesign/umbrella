@@ -1,4 +1,4 @@
-
+<div id='error'></div>
 <div id="l-map" style='width:100%;height:100%'></div>
 <script>
 $("html").css("width","100%");
@@ -29,10 +29,39 @@ wx.ready(function(){
 	        $.post("getBaiduPoint",{from:1,to:3,x:longitude,y:latitude},function(result){
 	        	map.panTo(new BMap.Point(result.x,result.y), 14);  
 	        },"json");
+	        getNearby(latitude,longitude);
 	    }
 	});
 });
+$(document).ready(function(){
+	var bound=map.getBounds();
+	getBound(bound._swLat,bound._swLng,bound._neLat,bound._neLng);
+});
 
+function getNearby(latitude,longitude){
+	$.get("nearbysearch",function(result){
+		for(var key in result.contents){
+			var value=result.contents[key];
+			var marker = new BMap.Marker(new BMap.Point(value.location[0], value.location[1]));        // 创建标注      
+			map.addOverlay(marker);
+        }    
+	},"json");
+}
+function getBound(swlat,swlng,nelat,nelng){
+	$.get("boundsearch",{swlat:swlat,swlng:swlng,nelat:nelat,nelng:nelng},function(result){
+		for(var key in result.contents){
+			var value=result.contents[key];
+			var marker = new BMap.Marker(new BMap.Point(value.location[0], value.location[1]));        // 创建标注      
+			map.addOverlay(marker);
+        }    
+	},"json");
+}
+
+
+map.addEventListener("moveend", function(){  
+	var bound=map.getBounds();
+	getBound(bound._swLat,bound._swLng,bound._neLat,bound._neLng);
+});
 
 
 

@@ -80,19 +80,19 @@ class WxController extends WxBaseController {
 	public function responseMsg() {
 		$postStr='';
 		if(isset($_GET['encrypt_type'])&&$_GET['encrypt_type']=='aes'){
-			$pc = new WXBizMsgCrypt(TOKEN,Yii::app()->params['encodingAesKey'], Yii::app()->params['appid']);
+			$pc = new WXBizMsgCrypt(TOKEN,Yii::app()->params['encodingAesKey'], APP_ID);
 			$errCode = $pc->decryptMsg($_GET['msg_signature'], $_GET['timestamp'], $_GET['nonce'], $GLOBALS ["HTTP_RAW_POST_DATA"], $postStr);
 			if($errCode!=0){
 				//如果第一次解密失败，那么再试一次上一个串
-				$pc = new WXBizMsgCrypt(TOKEN,Yii::app()->params['encodingAesKey2'], Yii::app()->params['appid']);
+				$pc = new WXBizMsgCrypt(TOKEN,Yii::app()->params['encodingAesKey2'], APP_ID);
 				$errCode = $pc->decryptMsg($_GET['msg_signature'], $_GET['timestamp'], $_GET['nonce'], $GLOBALS ["HTTP_RAW_POST_DATA"], $postStr);
 				if($errCode>0){
 					Yii::log ( $errCode, 'error', 'WX_MESSAGE_AES_ERROR' );
 					Yii::app()->end();
 				}
-				$this->encodingAesKey=Yii::app()->params['encodingAesKey2'];
+				$this->encodingAesKey=Encoding_Aes_Key;
 			}else{
-				$this->encodingAesKey=Yii::app()->params['encodingAesKey'];
+				$this->encodingAesKey=Encoding_Aes_Key2;
 			}
 			$this->restype=$_GET['encrypt_type'];
 			Yii::log ( CVarDumper::dumpAsString ( $postStr ), 'trace', 'WX_MESSAGE_AES_RESPONSE' );
@@ -179,7 +179,7 @@ class WxController extends WxBaseController {
 	
 	private function retRes($resultStr){
 		if($this->restype=='aes'){
-			$pc = new WXBizMsgCrypt ( TOKEN, $this->encodingAesKey, Yii::app ()->params ['appid'] );
+			$pc = new WXBizMsgCrypt ( TOKEN, $this->encodingAesKey, APP_ID );
 			$encryptMsg = '';
 			$errCode = $pc->encryptMsg ( $resultStr, $_GET ['timestamp'], $_GET ['nonce'], $encryptMsg );
 			if ($errCode > 0) {

@@ -17,7 +17,6 @@ class BaseController extends Controller
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/bootstrap/css/bootstrap.css');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/bootstrap/js/bootstrap.min.js');
 		Yii::app()->clientScript->registerScriptFile("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
-		
 		$this->signPackage=$this->getSignPackage();
 	}
 	
@@ -41,7 +40,6 @@ class BaseController extends Controller
 	
 		// 这里参数的顺序要按照 key 值 ASCII 码升序排序
 		$string = "jsapi_ticket=$jsapiTicket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
-	
 		$signature = sha1($string);
 	
 		$signPackage = array(

@@ -12,6 +12,14 @@ class BorrowController extends BaseController
 		Yii::app()->clientScript->registerScriptFile("http://developer.baidu.com/map/jsdemo/demo/convertor.js");
 		Yii::app()->clientScript->registerScriptFile("http://api.map.baidu.com/api?type=quick&ak=rodKy1ym1a848VUrDE3vqj4w&v=1.0");
 		$this->render('nearby');
+// 		$this->render('index');
+	}
+	
+	public function actionNearbysearch(){
+		echo BDLbs::Nearby();
+	}
+	public function actionBoundsearch(){
+		echo BDLbs::Bound();
 	}
 	// Uncomment the following methods and override them if needed
 	/*

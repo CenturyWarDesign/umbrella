@@ -1,16 +1,18 @@
 <?php
 class WX {
 	public static function actionAccessToken($get = false) {
-		$ret = Wxaccesstoken::model ()->findByAttributes ( array ('appid' => Yii::app ()->params ['appid'] ) );
+		$ret = Wxaccesstoken::model ()->findByAttributes ( array ('appid' => APP_ID) );
 		if (! $ret) {
 			$ret = new Wxaccesstoken ();
-			$ret->appid = Yii::app ()->params ['appid'];
-			$ret->appsecret = Yii::app ()->params ['appsecret'];
+			$ret->appid =APP_ID;
+			$ret->appsecret = APP_SECRET;
 			$ret->create_at = date("Y-m-d H:i:s",time());
 			$ret->save ();
 		}
 		if (empty ( $ret->accesstoken ) || $ret->expire_at < time () || $get) {
-			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$ret->appid}&secret={$ret->appsecret}";
+			$app_id=APP_ID;
+			$app_sec=APP_SECRET;
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$app_id}&secret={$app_sec}";
 			$response = Yii::app ()->curl->get ( $url );
 			$response = json_decode ( $response, true );
 			if (isset ( $response ['errcode'] )) {
@@ -26,11 +28,11 @@ class WX {
 		return $ret->accesstoken;
 	}
 	public static function actionTicketToken($get = false) {
-		$ret = Wxaccesstoken::model ()->findByAttributes ( array ('appid' => Yii::app ()->params ['appid'] ) );
+		$ret = Wxaccesstoken::model ()->findByAttributes ( array ('appid' =>APP_ID) );
 		if (! $ret) {
 			$ret = new Wxaccesstoken ();
-			$ret->appid = Yii::app ()->params ['appid'];
-			$ret->appsecret = Yii::app ()->params ['appsecret'];
+			$ret->appid = APP_ID;
+			$ret->appsecret = APP_SECRET;
 			$ret->create_at = date("Y-m-d H:i:s",time());
 			$ret->save ();
 		}
@@ -45,7 +47,7 @@ class WX {
 				$ret->ticket = $response ['ticket'];
 				$ret->ticket_expire_at = time () + $response ['expires_in'] - 300;
 				if (! $ret->save ()) {
-					print_R ( $ret->errors );
+					Yii::trace ( CVarDumper::dumpAsString ( $response ), 'get ticket save ERROR' );
 				}
 			}
 		}
@@ -85,8 +87,8 @@ class WX {
 	}
 	
 	public static function getUserWebOpenid($code){
-		$appid = Yii::app ()->params ['appid'];
-		$appsecret = Yii::app ()->params ['appsecret'];
+		$appid = APP_ID;
+		$appsecret =APP_SECRET;
 		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$appsecret}&code={$code}&grant_type=authorization_code";
 		Yii::trace ( $url, 'web accesstoken from code' );
 		$response = Yii::app ()->curl->get ( $url );
