@@ -120,6 +120,18 @@ class WX {
 			return $openid;
 		}
 	}
+	
+	public static function getShortUrl($url){
+		$accesstoken=WX::actionAccessToken();
+		$urlpost="https://api.weixin.qq.com/cgi-bin/shorturl?access_token=$accesstoken";
+		$params=array('action'=>'long2short','long_url'=>$url);
+// 		echo json_encode($params);
+// 		echo $urlpost;
+// 		exit();
+		$response = Yii::app ()->curl->post ( $urlpost,json_encode($params),array() );
+		$response = json_decode ( $response, true );
+		print_R($response);
+	}
 	public static function getTime(){
 		return date("Y-m-d H:i:s",time());
 	}

@@ -47,17 +47,30 @@ function getNearby(latitude,longitude){
         }    
 	},"json");
 }
+
 function getBound(swlat,swlng,nelat,nelng){
 	$.get("boundsearch",{swlat:swlat,swlng:swlng,nelat:nelat,nelng:nelng},function(result){
 		map.clearOverlays();
 		for(var key in result.contents){
 			var value=result.contents[key];
 			var marker = new BMap.Marker(new BMap.Point(value.location[0], value.location[1]));        // 创建标注      
+			marker.addEventListener("click", function(){   
+				openWindow(this,value.title);
+			});
 			map.addOverlay(marker);
         }    
 	},"json");
 }
 
+function openWindow(marker){
+	var opts = {      
+	    width : 100,     // 信息窗口宽度      
+	    height: 50,     // 信息窗口高度      
+	    title : "ss"  // 信息窗口标题     
+	}      
+	var infoWindow = new BMap.InfoWindow("adfahd", opts);  // 创建信息窗口对象      
+	map.openInfoWindow(infoWindow, marker.getPosition());    
+}
 
 map.addEventListener("moveend", function(){  
 	var bound=map.getBounds();
