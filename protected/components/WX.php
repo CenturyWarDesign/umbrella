@@ -125,12 +125,11 @@ class WX {
 		$accesstoken=WX::actionAccessToken();
 		$urlpost="https://api.weixin.qq.com/cgi-bin/shorturl?access_token=$accesstoken";
 		$params=array('action'=>'long2short','long_url'=>$url);
-// 		echo json_encode($params);
-// 		echo $urlpost;
-// 		exit();
-		$response = Yii::app ()->curl->post ( $urlpost,json_encode($params),array() );
+		$response = Yii::app ()->curl->post ( $urlpost,$params,'json' );
 		$response = json_decode ( $response, true );
-		print_R($response);
+		if($response['errcode']==0){
+			return $response['short_url'];
+		}
 	}
 	public static function getTime(){
 		return date("Y-m-d H:i:s",time());

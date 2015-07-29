@@ -472,6 +472,7 @@ class CHtml
 			if(!array_key_exists('name',$htmlOptions))
 				$htmlOptions['name']=self::ID_PREFIX.self::$count++;
 		}
+		$htmlOptions['class']='btn btn-default';
 		if(!isset($htmlOptions['type']))
 			$htmlOptions['type']='button';
 		if(!isset($htmlOptions['value']) && $htmlOptions['type']!='image')
@@ -1987,6 +1988,8 @@ EOD;
 			self::addErrorCss($htmlOptions);
 
 		$hidden='';
+		
+		$htmlOptions['class']='form-control';
 		if(!empty($htmlOptions['multiple']))
 		{
 			if(substr($htmlOptions['name'],-2)!=='[]')
@@ -2445,7 +2448,7 @@ EOD;
 			elseif($htmlOptions['maxlength']===false)
 				unset($htmlOptions['maxlength']);
 		}
-
+		$htmlOptions['class']='form-control';
 		if($type==='file')
 			unset($htmlOptions['value']);
 		elseif(!isset($htmlOptions['value']))

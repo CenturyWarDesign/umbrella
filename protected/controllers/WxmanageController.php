@@ -16,8 +16,6 @@ class WxmanageController extends Controller
 		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/id/wb2398479286519871.837486');
 		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
 		$tem= sprintf($url,$appid,$umbrella);
-		echo WX::getShortUrl($tem);
-		exit();
 		$item=array('button'=>array(
 				array('name'=>'我要借伞','sub_button'=>array(
 						array('name'=>'快速扫码','type'=>'scancode_push','key'=>'wechat_scan_push'),

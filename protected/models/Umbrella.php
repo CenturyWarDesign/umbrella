@@ -33,7 +33,7 @@ class Umbrella extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('umbrellaid, create_userid, now_userid, create_at', 'required'),
+			array('umbrellaid, create_userid, now_userid, create_at,img,des,price', 'required'),
 			array('create_userid, now_userid, status', 'numerical', 'integerOnly'=>true),
 			array('price', 'numerical'),
 			array('umbrellaid', 'length', 'max'=>25),
@@ -67,9 +67,9 @@ class Umbrella extends CActiveRecord
 			'umbrellaid' => 'Umbrellaid',
 			'create_userid' => 'Create Userid',
 			'now_userid' => 'Now Userid',
-			'des' => 'Des',
-			'img' => 'Img',
-			'price' => 'Price',
+			'des' => '描述',
+			'img' => '图片',
+			'price' => '价格',
 			'status' => 'Status',
 			'create_at' => 'Create At',
 			'update_at' => 'Update At',

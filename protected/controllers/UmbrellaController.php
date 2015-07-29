@@ -7,29 +7,30 @@ class UmbrellaController extends BaseController
 		$this->render('index');
 	}
 	
-	public function actionAddumbrella()
+	public function actionList(){
+		$this->render('index');
+	}
+	public function actionAdd()
 	{
 		$model=new Umbrella;
-	
-		// uncomment the following code to enable ajax-based validation
-		/*
-		 if(isset($_POST['ajax']) && $_POST['ajax']==='umbrella-addumbrella-form')
-		 {
-		echo CActiveForm::validate($model);
-		Yii::app()->end();
-		}
-		*/
-	
 		if(isset($_POST['Umbrella']))
 		{
+			
+			$model->attributes=$_POST;
+			$model->umbrellaid=uniqid('',true);
 			$model->attributes=$_POST['Umbrella'];
+			$model->create_userid=$this->user_id;
+			$model->now_userid=$this->user_id;
+			$model->create_at=$this->getTime();
 			if($model->validate())
 			{
+				$model->save();
 				// form inputs are valid, do something here
+				$this->render('add',array('model'=>$model,'status'=>'success'));
 				return;
 			}
 		}
-		$this->render('addumbrella',array('model'=>$model));
+		$this->render('add',array('model'=>$model,'status'=>'new'));
 	}
 
 	// Uncomment the following methods and override them if needed

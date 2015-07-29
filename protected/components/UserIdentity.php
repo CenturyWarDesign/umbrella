@@ -30,4 +30,17 @@ class UserIdentity extends CUserIdentity
 			$this->errorCode=self::ERROR_NONE;
 		return !$this->errorCode;
 	}
+	
+	//以后要放入缓存中
+	public static function getuserid($openid){
+		if (! empty ( $openid )) {
+			$user = User::model ()->get_id ()->findByAttributes ( array (
+					'udid' => $openid
+			) );
+			if ($user) {
+				return $user->id;
+			}
+		}
+		return "";
+	}
 }

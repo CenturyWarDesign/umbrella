@@ -3,6 +3,7 @@ class BaseController extends Controller
 {
 	public $signPackage='';
 	public $openid='';
+	public $user_id=-1;
 	public function init()
 	{
 		Yii::log(Yii::app()->getRequest()->getRequestUri(), 'trace', 'API_RAW_REQUEST_URL');
@@ -13,6 +14,11 @@ class BaseController extends Controller
 			}
 		}
 		$this->openid=Yii::app()->session['openid'];
+		if(in_array(SERVER_NAME, array('yicheng','mac'))){
+			$this->openid='opYNAwg9MS6Btoo0cVmvvQLSaoHY';
+		}
+		$this->user_id=UserIdentity::getuserid($this->openid);
+		
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-2.1.4.min.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/bootstrap/css/bootstrap.css');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/bootstrap/js/bootstrap.min.js');
@@ -65,5 +71,8 @@ class BaseController extends Controller
 			$response['y']=base64_decode($response['y']);
 		}
 		echo json_encode($response);
+	}
+	public function getTime(){
+		return date('Y-m-d H:i:s');
 	}
 }
