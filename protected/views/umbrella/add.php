@@ -15,6 +15,15 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'img'); ?>
+		<div>
+		<img id='imgumbrella' style='width:100px;height:100px;' hidden alt="" class="img-rounded" onclick='chooseImg()'>
+		<?php echo CHtml::button('选择图片',array('onclick'=>'chooseImg()'));?>
+		<?php echo $form->hiddenField($model,'img'); ?>
+		</div>
+	</div>
+
 	 <div class="form-group">
 		<?php echo $form->labelEx($model,'des'); ?>
 		<?php echo $form->textField($model,'des'); ?>
@@ -26,14 +35,9 @@
 		<?php echo $form->dropDownList($model,'price',array('10'=>'￥10.0','20'=>'￥20.0','30'=>'￥30.0')); ?>
 		<?php echo $form->error($model,'price'); ?>
 	</div>
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'img'); ?>
-		<?php echo CHtml::button('选择图片',array('onclick'=>'chooseImg()'));?>
-		<img id='imgumbrella' style='width:100px;height:100px;' hidden alt="" class="img-rounded" onclick='chooseImg()'>
-		<?php echo $form->hiddenField($model,'img'); ?>
-	</div>
+	
 	<?php echo $form->errorSummary($model); ?>
-	<?php echo CHtml::submitButton('创建');?>
+	<?php echo CHtml::submitButton('创建',array('id'=>"sumitbutton"));?>
 
 <?php $this->endWidget(); ?>
 
@@ -48,8 +52,20 @@ function chooseImg(){
 	    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 	    success: function (res) {
 	        var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-	        $("#imgumbrella").attr("src",localIds);
-	        $("#Umbrella_img").val(localIds);
+	        var imageid=localIds[0];
+	        $("#imgumbrella").show();
+	        $("#imgumbrella").attr("src",imageid);
+	        $("#sumitbutton").attr('disabled',true);
+	        wx.uploadImage({
+	            localId: imageid, // 需要上传的图片的本地ID，由chooseImage接口获得
+	            isShowProgressTips: 1, // 默认为1，显示进度提示
+	            success: function (res) {
+	                var serverId = res.serverId; // 返回图片的服务器端ID
+	    	        $("#imgumbrella").attr("src",imageid);
+	    	        $("#Umbrella_img").val(localIds[0]);
+	    	        $("#sumitbutton").attr('disabled',false);
+	            }
+	        });
 	    }
 	});
 }

@@ -10,7 +10,7 @@ class BaseController extends Controller
 		if(!empty($_GET['code'])&&!empty($_GET['state'])&&$_GET['state']=='wxbutton'){
 			$temopenid=WX::getUserWebOpenid($_GET['code']);
 			if(!empty($temopenid)){
-				Yii::app()->session['openid']=$this->openid;
+				Yii::app()->session['openid']=$temopenid;
 			}
 		}
 		$this->openid=Yii::app()->session['openid'];
