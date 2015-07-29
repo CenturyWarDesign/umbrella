@@ -84,7 +84,7 @@ class BaseController extends Controller
 		if (empty ( $fh )) {
 			return false;
 		}
-		$path="/".$this->user_id.'/'.$medil.'.jpg';
+		$path="/".md5($this->openid).'/'.$medil.'.jpg';
 		$rsp = $upyun->writeFile($path, $fh, True);   // 上传图片，自动创建目录
 		return UPYUN_CDN.$path;
 	}
