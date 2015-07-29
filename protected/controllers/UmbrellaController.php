@@ -28,12 +28,17 @@ class UmbrellaController extends BaseController
 				$model->img=$this->updateWxImage($model->img);
 				$model->save();
 				// form inputs are valid, do something here
-				$models=new Umbrella();
-				$this->render('add',array('model'=>$models,'status'=>'success'));
+				Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
+				$this->render('addsuccess',array('umbrellaid'=>$model->umbrellaid,'status'=>'success'));
 				return;
 			}
 		}
 		$this->render('add',array('model'=>$model,'status'=>'new'));
+	}
+	
+	public function actionAddSuccess(){
+		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
+		$this->render('addsuccess',array('umbrellaid'=>uniqid('',true),'status'=>'success'));
 	}
 
 	// Uncomment the following methods and override them if needed
