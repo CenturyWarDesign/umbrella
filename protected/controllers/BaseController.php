@@ -75,4 +75,17 @@ class BaseController extends Controller
 	public function getTime(){
 		return date('Y-m-d H:i:s');
 	}
+	
+	public function updateWxImage($medil){
+		$accesstoken = WX::actionAccessToken ();
+		$imgurl = "https://api.weixin.qq.com/cgi-bin/media/get?access_token={$accesstoken}&media_id={$medil}";
+		$upyun = new UpYun ( UPYUN_BUCKET, UPYUN_USER, UPYUN_PASSWORD );
+		$fh = file_get_contents ( $imgurl );
+		if (empty ( $fh )) {
+			return false;
+		}
+		$path="/".$this->user_id.'/'.$medil.'.jpg';
+		$rsp = $upyun->writeFile($path, $fh, True);   // 上传图片，自动创建目录
+		return UPYUN_CDN.$path;
+	}
 }

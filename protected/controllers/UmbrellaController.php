@@ -12,6 +12,7 @@ class UmbrellaController extends BaseController
 	}
 	public function actionAdd()
 	{
+
 		$model=new Umbrella;
 		if(isset($_POST['Umbrella']))
 		{
@@ -24,6 +25,7 @@ class UmbrellaController extends BaseController
 			$model->create_at=$this->getTime();
 			if($model->validate())
 			{
+				$model->img=$this->updateWxImage($model->img);
 				$model->save();
 				// form inputs are valid, do something here
 				$models=new Umbrella();

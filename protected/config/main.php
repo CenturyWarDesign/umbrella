@@ -18,6 +18,7 @@ return array(
 		'application.controllers.*',
 		'ext.YiiMongoDbSuite.*',
 		'ext.php_AES.*',
+		'ext.upyun.*',
 	),
 
 	'modules'=>array(
