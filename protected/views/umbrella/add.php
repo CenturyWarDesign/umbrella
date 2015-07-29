@@ -18,7 +18,7 @@
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'img'); ?>
 		<div>
-		<img id='imgumbrella' style='width:100px;height:100px;' hidden alt="" class="img-rounded" onclick='chooseImg()'>
+		<img id='imgumbrella' style='height:100px;' hidden alt="" class="img-rounded" onclick='chooseImg()'>
 		<?php echo CHtml::button('选择图片',array('onclick'=>'chooseImg()'));?>
 		<?php echo $form->hiddenField($model,'img'); ?>
 		</div>
@@ -61,8 +61,8 @@ function chooseImg(){
 	            isShowProgressTips: 1, // 默认为1，显示进度提示
 	            success: function (res) {
 	                var serverId = res.serverId; // 返回图片的服务器端ID
-	    	        $("#imgumbrella").attr("src",imageid);
-	    	        $("#Umbrella_img").val(localIds[0]);
+	    	        $("#imgumbrella").attr("src",serverId);
+	    	        $("#Umbrella_img").val(serverId);
 	    	        $("#sumitbutton").attr('disabled',false);
 	            }
 	        });

@@ -26,7 +26,8 @@ class UmbrellaController extends BaseController
 			{
 				$model->save();
 				// form inputs are valid, do something here
-				$this->render('add',array('model'=>$model,'status'=>'success'));
+				$models=new Umbrella();
+				$this->render('add',array('model'=>$models,'status'=>'success'));
 				return;
 			}
 		}
