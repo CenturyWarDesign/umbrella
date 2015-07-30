@@ -8,10 +8,10 @@
 			<h5><?php echo '持有者：'.$now_user->nickname ?></h5>
 			<!-- 判断是借伞还是收伞 -->
 			<?php if(in_array('borrow',$actions)){?>
-				<button type="button" class="btn btn-default btn-block col-md-4"><?php echo Yii::t("button", "我要借")?></button>
+				<button type="button" class="btn btn-default btn-block col-md-4"><?php echo Yii::t("button", "我要借入")?></button>
 			<?php };?>
 			<?php if(in_array('recovery',$actions)){?>
-				<button type="button" class="btn btn-default btn-block col-md-4"><?php echo Yii::t("button", "我要收")?></button>
+				<button type="button" class="btn btn-default btn-block col-md-4"><?php echo Yii::t("button", "我要收回")?></button>
 			<?php }?>
 			<?php if(in_array('share',$actions)){?>
 				<button type="button" class="btn btn-default btn-block col-md-4" onclick="qrcode()"><?php echo Yii::t("button", "生成二维码")?></button>
@@ -24,6 +24,10 @@
 <div  id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h5 class="modal-title"><?php echo $umbrella->des ?></h5>
+      </div>
     <div id='output' style='padding:5px'></div>
     </div>
   </div>

@@ -8,7 +8,31 @@ class UmbrellaController extends BaseController
 	}
 	
 	public function actionList(){
-		$this->render('index');
+		$umbrellalist=Umbrella::model()->findAllByAttributes(array(),'(create_userid=:user_id or now_userid=:user_id) ',array(':user_id'=>$this->user_id));
+		$nowlist=array();
+		$borrowlist=array();
+		$loanlist=array();
+		$createlist=array();
+		foreach ($umbrellalist as $umbrella){
+			if($umbrella->now_userid==$this->user_id){
+				$nowlist[]=$umbrella;
+				if($umbrella->create_userid!=$this->user_id){
+					$borrowlist[]=$umbrella;
+				}
+			}
+			if($umbrella->create_userid==$this->user_id){
+				$createlist[]=$umbrella;
+				if($umbrella->now_userid!=$this->user_id){
+					$loanlist[]=$umbrella;
+				}
+			}
+		}
+		$this->render('list',array(
+				'nowlist'=>$nowlist,
+				'borrowlist'=>$borrowlist,
+				'loanlist'=>$loanlist,
+				'createlist'=>$createlist,
+				));
 	}
 	public function actionAdd()
 	{
@@ -57,16 +81,36 @@ class UmbrellaController extends BaseController
 			$now_user=User::model()->findByPk($umbrella->now_userid);
 			$umbrella->status=UMBRELLASTATUS::getStatus($umbrella->status);
 			$actions=array('cancle');
-			if ($umbrella->create_userid != $umbrella->now_userid) {
-				//目前在外面，可以收回
-				if($this->user_id!=$umbrella->create_userid){
-					$actions[]='recovery';
-				}else{
-					$actions[]='borrow';
+			
+			//在自己的手里
+			if($umbrella->now_userid==$this->user_id){
+				if($umbrella->create_userid!=$this->user_id){
+					$actions[]='share';
+				}
+				else{
+					$actions[]='share';
 				}
 			}else{
-				$actions[]='share';
+				//扫描不在自己手中的伞，如果创建者是自己，那么就是收回 
+				if($umbrella->create_userid==$this->user_id){
+					$actions[]='recovery';
+				}
+				else{
+					$actions[]='borrow';
+				}
 			}
+			
+// 			if ($umbrella->create_userid != $umbrella->now_userid) {
+// 				//目前在外面，可以收回
+// 				if($this->user_id!=$umbrella->create_userid){
+// 					$actions[]='recovery';
+// 				}else{
+// 					$actions[]='borrow';
+// 				}
+// 			}else{
+// 				$actions[]='share';
+// 			}
+			
 			Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
 			$this->render('info',array('umbrella'=>$umbrella,
 					'create_user'=>$now_user,
@@ -81,7 +125,7 @@ class UmbrellaController extends BaseController
 	
 	private function getUmbrellaUrl($umbrellaid){
 		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
-		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/id/'.$umbrellaid);
+		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/info/'.$umbrellaid);
 		$tem= sprintf($url,APP_ID,$umbrella);
 		return WX::getShortUrl($tem);
 	}

@@ -1,1 +1,0 @@
-<?php echo CHtml::link('创建一个','add');?>
