@@ -94,4 +94,10 @@ class BaseController extends Controller
 		$rsp = $upyun->writeFile($path, $fh, True);   // 上传图片，自动创建目录
 		return UPYUN_CDN.$path;
 	}
+	
+	public function jsonReturn($message,$code){
+		$return=array('code'=>$code,'message'=>$message);
+		echo json_encode($return);
+		Yii::app()->end();
+	}
 }

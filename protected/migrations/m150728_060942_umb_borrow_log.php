@@ -14,7 +14,7 @@ class m150728_060942_umb_borrow_log extends CDbMigration
 				'borrowed_y' => 'float',
 				'borrowed_at' => 'timestamp',
 				'repaid_at' => 'timestamp',
-				'borrowed_type' => 'int', //1,直接，2预约，3外送
+				'borrowed_type' => 'int', //0回收,1,直接，2预约，3外送
 				'des'=>'varchar(200)'
 		),
 				'ENGINE=InnoDB DEFAULT CHARSET=utf8');

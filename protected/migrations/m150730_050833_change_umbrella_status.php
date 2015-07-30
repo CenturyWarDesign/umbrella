@@ -6,6 +6,7 @@ class m150730_050833_change_umbrella_status extends CDbMigration
 	{
 		$this->alterColumn("umb_umbrella", 'status', 'int default 0');
 		$this->update("umb_umbrella", array('status'=>0),"");
+		
 	}
 
 	public function down()

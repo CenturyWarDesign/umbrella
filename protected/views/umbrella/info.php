@@ -1,4 +1,4 @@
-<div class='text-center container-fluid' style='margin:50px 0px'>
+<div class='text-center container-fluid' style='margin:20px 0px'>
 		<img id='imgumbrella' style='height:200px;margin:10px' alt='<?php echo $umbrella->des?>'src='<?php echo $umbrella->img?>!200X200' onclick='showImg("<?php echo $umbrella->img?>")'>
 		<h4><?php echo $umbrella->des ?></h4>
 		<div class="row">
@@ -8,13 +8,13 @@
 			<h5><?php echo '持有者：'.$now_user->nickname ?></h5>
 			<!-- 判断是借伞还是收伞 -->
 			<?php if(in_array('borrow',$actions)){?>
-				<button type="button" class="btn btn-default btn-block col-md-4"><?php echo Yii::t("button", "我要借入")?></button>
+				<button type="button" class="btn btn-default btn-block col-md-4" onclick='borrow()'><?php echo Yii::t("button", "我要借入")?></button>
 			<?php };?>
 			<?php if(in_array('recovery',$actions)){?>
-				<button type="button" class="btn btn-default btn-block col-md-4"><?php echo Yii::t("button", "我要收回")?></button>
+				<button type="button" class="btn btn-default btn-block col-md-4" onclick='borrow()'><?php echo Yii::t("button", "我要收回")?></button>
 			<?php }?>
 			<?php if(in_array('share',$actions)){?>
-				<button type="button" class="btn btn-default btn-block col-md-4" onclick="qrcode()"><?php echo Yii::t("button", "生成二维码")?></button>
+				<button type="button" class="btn btn-default btn-block col-md-4" onclick="qrcode()"><?php echo Yii::t("button", "生成二维码,可借出")?></button>
 			<?php }?>
 		
 		<button type="button" class="btn btn-link btn-block col-md-2" onclick="scan()"><?php echo Yii::t("button", "扫一扫")?></button>
@@ -62,4 +62,30 @@ function qrcode(){
 		jQuery('#output').qrcode({width:width,height:width,correctLevel:0,text:"<?php echo $url?>"}); 
 	}
 }
+var latitude=0;
+var longitude=0;
+
+wx.ready(function(){
+	wx.getLocation({
+	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    success: function (res) {
+	    	latitude= res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        console.log(res);
+	    },
+	});
+});
+
+function borrow(){
+	$.post("/index.php/umbrella/borrow",{umbrellaid:'<?php echo $umbrella->umbrellaid?>',latitude:latitude,longitude:longitude},function(result){
+	    if(result.code==0){
+		    alert("成功");
+		    location.reload();
+	    }
+	    else{
+		    alert(result.message);
+	    }
+	 },'json');
+}
+
 </script>

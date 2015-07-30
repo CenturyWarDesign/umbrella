@@ -79,7 +79,7 @@ class UmbrellaController extends BaseController
 		if($umbrella){
 			$create_user=User::model()->findByPk($umbrella->create_userid);
 			$now_user=User::model()->findByPk($umbrella->now_userid);
-			$umbrella->status=UMBRELLASTATUS::getStatus($umbrella->status);
+			$umbrella->status=STATUS::getStatus($umbrella->status);
 			$actions=array('cancle');
 			
 			//在自己的手里
@@ -99,18 +99,6 @@ class UmbrellaController extends BaseController
 					$actions[]='borrow';
 				}
 			}
-			
-// 			if ($umbrella->create_userid != $umbrella->now_userid) {
-// 				//目前在外面，可以收回
-// 				if($this->user_id!=$umbrella->create_userid){
-// 					$actions[]='recovery';
-// 				}else{
-// 					$actions[]='borrow';
-// 				}
-// 			}else{
-// 				$actions[]='share';
-// 			}
-			
 			Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
 			$this->render('info',array('umbrella'=>$umbrella,
 					'create_user'=>$now_user,
@@ -133,9 +121,53 @@ class UmbrellaController extends BaseController
 		}
 		return $ret;
 	}
+	
+	public function actionBorrow(){
+		$umbrellaid=$_POST['umbrellaid'];
+		$umbrella=Umbrella::model()->findByAttributes(array('umbrellaid'=>$umbrellaid));
+		if($umbrella->now_userid==$this->user_id){
+			$this->jsonReturn("borrow ok", CODE::UMBRELLA_BORROW_SELF);
+		}
+		
+		$borrowstatus=STATUS::BORROW_BORROW;
+		$umbrellastatus=STATUS::BORROWED;
+		
+		$fromuserid=$umbrella->now_userid;
+		$touserid=$this->user_id;
+		
+		if($umbrella->create_userid==$this->user_id){
+			//这里是回收
+			$borrowstatus=STATUS::BORROW_RETURN;
+			$umbrellastatus=STATUS::IDLE;
+		}
+		
+		$umblog=new BorrowLog();
+		$umblog->umbrellaid=$umbrella->id;
+		$umblog->user_id=intval($touserid);
+		$umblog->borrowed_from=intval($fromuserid);
+		$umblog->borrowed_at=strtotime($umbrella->update_at)==0?$umbrella->create_at:$umbrella->update_at;
+		$umblog->repaid_at=$this->getTime();
+		$umblog->borrowed_x=$_POST['latitude'];
+		$umblog->borrowed_y=$_POST['longitude'];
+		$umblog->borrowed_type=$borrowstatus;
+		if(!$umblog->save()){
+			$this->jsonReturn("unknow", CODE::ERROR);
+		}
+		
+		//记录完成，要修改状态
+		$umbrella->now_userid=$this->user_id;
+		$umbrella->update_at=$this->getTime();
+		$umbrella->status=$umbrellastatus;
+		if(!$umbrella->save()){
+			$this->jsonReturn("unknow", CODE::ERROR);
+		}
+		
+		$this->jsonReturn("borrow ok", CODE::OK);
+	}
 }
 
-class UMBRELLASTATUS{
+
+class STATUS{
 	const ISNEW=null;
 	const IDLE=0;
 	const BORROWED=1;
@@ -143,6 +175,11 @@ class UMBRELLASTATUS{
 	const OVERTIME=-2;
 	const LOST=-3;
 	const ORDER=2;
+	
+	const BORROW_RETURN=100;
+	const BORROW_BORROW=101;
+	const BORROW_ORDER=102;
+	const BORROW_SEND=103;
 	protected static $status = array(
 			self::ISNEW=>'新创建',
 			self::IDLE=>'空闲',
@@ -151,7 +188,12 @@ class UMBRELLASTATUS{
 			self::OVERTIME=>'超期',
 			self::LOST=>'丢失',
 			self::ORDER=>'被预定',
-			);
+			
+			self::BORROW_RETURN=>'归还操作',
+			self::BORROW_BORROW=>'借伞操作',
+			self::BORROW_ORDER=>'预定操作',
+			self::BORROW_SEND=>'送伞操作',
+	);
 	public static function getStatus($statuscode) {
 		return isset(self::$status[$statuscode])?self::$status[$statuscode]:"";
 	}
