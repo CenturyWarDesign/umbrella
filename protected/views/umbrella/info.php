@@ -55,10 +55,11 @@ function close(){
 }
 function qrcode(){
 	$('#myModal').modal({
-		  keyboard: false
+		  keyboard: true
 		})
 	if($("#output").html()==""){
-		var width=$("#myModal").width()-40;
+		var width=$("#myModal .modal-dialog").width()-40;
+		console.log(width);
 		jQuery('#output').qrcode({width:width,height:width,correctLevel:0,text:"<?php echo $url?>"}); 
 	}
 }
@@ -75,12 +76,11 @@ wx.ready(function(){
 	    },
 	});
 });
-
 function borrow(){
 	$.post("/index.php/umbrella/borrow",{umbrellaid:'<?php echo $umbrella->umbrellaid?>',latitude:latitude,longitude:longitude},function(result){
 	    if(result.code==0){
 		    alert("成功");
-		    location.reload();
+		    window.location.href=window.location.pathname; 
 	    }
 	    else{
 		    alert(result.message);

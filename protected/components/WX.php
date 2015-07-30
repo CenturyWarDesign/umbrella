@@ -156,6 +156,9 @@ class WX {
 		if($response['errcode']==0){
 			return $response['short_url'];
 		}else{
+			if( $response ['errcode']==41001){
+// 				WX::actionAccessToken(true);
+			}
 			return "";
 		}
 	}

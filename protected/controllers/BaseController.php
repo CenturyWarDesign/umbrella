@@ -82,6 +82,9 @@ class BaseController extends Controller
 	 * @return string
 	 */
 	public function updateWxImage($medil){
+		if(substr($medil, 0,4)=='http'){
+			return $medil;
+		}
 		$accesstoken = WX::actionAccessToken ();
 		$imgurl = "https://api.weixin.qq.com/cgi-bin/media/get?access_token={$accesstoken}&media_id={$medil}";
 		$upyun = new UpYun ( UPYUN_BUCKET, UPYUN_USER, UPYUN_PASSWORD );

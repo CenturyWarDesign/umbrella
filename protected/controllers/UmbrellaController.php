@@ -47,6 +47,9 @@ class UmbrellaController extends BaseController
 			$model->create_userid=$this->user_id;
 			$model->now_userid=$this->user_id;
 			$model->create_at=$this->getTime();
+			if(SERVER_TEST){
+				$model->img="http://umbrella.b0.upaiyun.com/991c/991c1b1f34d6d076bcf7e01925af1e43/7GTMyFS_QW00m6fdAzzdphLPJtGAvlF9Gd4ivkWNQ9-olR2mFgn6NBn8JW8e78H2.jpg";
+			}
 // 			$model->status=UMBRELLASTATUS::IDLE;
 			if($model->validate())
 			{
