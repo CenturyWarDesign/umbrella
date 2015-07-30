@@ -14,7 +14,7 @@ class CommunityController extends BaseController
 		if(!$community){
 			$community=new Community();
 		}
-		$userlocate=User::model()->get_locate()->findByPk($this->user_id);
+		$userlocate=User::model()->get_locate()->findByPk($userid);
 		$community->user_id=$userid;
 		$community->begin_time=self::getTime();
 		$community->lng=$userlocate->y;
