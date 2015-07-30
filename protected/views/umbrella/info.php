@@ -58,8 +58,7 @@ function qrcode(){
 		  keyboard: true
 		})
 	if($("#output").html()==""){
-		var width=$("#myModal .modal-dialog").width()-40;
-		console.log(width);
+		var width=Math.max($("#myModal .modal-dialog").width(),$("#myModal").width())-40;
 		jQuery('#output').qrcode({width:width,height:width,correctLevel:0,text:"<?php echo $url?>"}); 
 	}
 }
