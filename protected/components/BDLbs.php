@@ -67,6 +67,7 @@ class BDLbs extends Controller
 		}
 		$sn=BDLbs::caculateAKSN( $uri, $querystring_arrays,"POST");
 		$querystring_arrays['sn']=$sn;
+		Yii::trace ( CVarDumper::dumpAsString ( $querystring_arrays ), 'create or update baidu poi post' );
 		$ret=Yii::app()->curl->post(Yii::app()->params['baiduapi'].$uri,$querystring_arrays);
 		$ret=json_decode($ret,true);
 		Yii::trace ( CVarDumper::dumpAsString ( $ret ), 'create or update baidu poi' );
