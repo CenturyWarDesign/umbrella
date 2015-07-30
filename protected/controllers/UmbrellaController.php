@@ -125,7 +125,7 @@ class UmbrellaController extends BaseController
 	
 	private function getUmbrellaUrl($umbrellaid){
 		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
-		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/info/'.$umbrellaid);
+		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/info/id/'.$umbrellaid);
 		$tem= sprintf($url,APP_ID,$umbrella);
 		$ret=WX::getShortUrl($tem);
 		if(empty($ret)){
