@@ -24,9 +24,9 @@ class CommunityController extends BaseController
 		$community->type=1;
 		$community->des=$userlocate->nickname."的漂流伞";
 		if(!$community->save()){
-			BDLbs::createOrUpdate(intval($community->communityid),$community->des, $community->des, $community->lat, $community->lng,$type);
 			Yii::log(CVarDumper::dumpAsString ( $community->errors ),'error','Community new save error');
 		}else {
+			BDLbs::createOrUpdate(intval($community->communityid),$community->des, $community->des, $community->lat, $community->lng,$type);
 			return true;
 		}
 	}
