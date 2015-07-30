@@ -64,7 +64,7 @@ class BDLbs extends Controller
 					'ak'=>MAP_AK,
 			);
 		}
-		$sn=BDLbs::caculateAKSN( $uri, $querystring_arrays);
+		$sn=BDLbs::caculateAKSN( $uri, $querystring_arrays,"POST");
 		$querystring_arrays['sn']=$sn;
 		$ret=Yii::app()->curl->post(Yii::app()->params['baiduapi'].$uri,$querystring_arrays);
 		$ret=json_decode($ret,true);
