@@ -112,7 +112,7 @@ class UmbrellaController extends BaseController
 	}
 	
 	private function getUmbrellaUrl($umbrellaid){
-		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
+		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=wxbutton#wechat_redirect";
 		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/info/id/'.$umbrellaid);
 		$tem= sprintf($url,APP_ID,$umbrella);
 		$ret=WX::getShortUrl($tem);
@@ -158,6 +158,7 @@ class UmbrellaController extends BaseController
 		$umbrella->now_userid=$this->user_id;
 		$umbrella->update_at=$this->getTime();
 		$umbrella->status=$umbrellastatus;
+		$umbrella->umbrellaid=uniqid('',true);
 		if(!$umbrella->save()){
 			$this->jsonReturn("unknow", CODE::ERROR);
 		}

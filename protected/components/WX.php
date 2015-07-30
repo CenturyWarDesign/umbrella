@@ -85,6 +85,30 @@ class WX {
 		
 		}
 	}
+	public static function updateInfoByAccesstoken($openid, $accesstoken) {
+		$url = "https://api.weixin.qq.com/sns/userinfo?access_token={$accesstoken}&openid={$openid}&lang=zh_CN";
+		$response = Yii::app ()->curl->get ( $url );
+		$response = json_decode ( $response, true );
+		Yii::trace ( CVarDumper::dumpAsString ( $response ), 'get wx userinfo' );
+		if (!isset ( $response ['errcode'] )) {
+			$user = User::model ()->findByAttributes ( array ('udid' => $openid ) );
+			$user->nickname = $response ['nickname'];
+			$user->sex = $response ['sex'];
+			$user->language = $response ['language'];
+			$user->city = $response ['city'];
+			$user->province = $response ['province'];
+			$user->country = $response ['country'];
+			$user->headimgurl = $response ['headimgurl'];
+			$user->subscribe_time = $response ['subscribe_time'];
+			$user->remark = $response ['remark'];
+			$user->groupid = $response ['groupid'];
+			$user->update_at = date("Y-m-d H:i:s",time());
+			if (! $user->save ()) {
+				Yii::trace ( CVarDumper::dumpAsString ( $user->errors ), 'Update user info error' );
+			}
+		
+		}
+	}
 	
 	public static function getUserWebOpenid($code){
 		$appid = APP_ID;

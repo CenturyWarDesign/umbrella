@@ -37,9 +37,13 @@ class UserIdentity extends CUserIdentity
 			$user = User::model ()->get_id ()->findByAttributes ( array (
 					'udid' => $openid
 			) );
-			if ($user) {
-				return $user->id;
+			if(!$user){
+				$user=new User();
+				$user->udid = $openid;
+				$user->create_at=$this->getTime();
+				$user->save();
 			}
+			return $user->id;
 		}
 		return "";
 	}
