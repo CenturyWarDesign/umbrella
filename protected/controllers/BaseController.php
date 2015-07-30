@@ -98,8 +98,8 @@ class BaseController extends Controller
 		return UPYUN_CDN.$path;
 	}
 	
-	public function jsonReturn($message,$code){
-		$return=array('code'=>$code,'message'=>$message);
+	public function jsonReturn($message,$code,$data=array()){
+		$return=array('code'=>$code,'message'=>$message,'data'=>$data);
 		echo json_encode($return);
 		Yii::app()->end();
 	}

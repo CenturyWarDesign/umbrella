@@ -78,8 +78,7 @@ wx.ready(function(){
 function borrow(){
 	$.post("/index.php/umbrella/borrow",{umbrellaid:'<?php echo $umbrella->umbrellaid?>',latitude:latitude,longitude:longitude},function(result){
 	    if(result.code==0){
-		    alert("成功");
-		    window.location.href=window.location.pathname; 
+		    window.location.href=window.location.pathname.replace(result.data.oldid,result.data.newid); 
 	    }
 	    else{
 		    alert(result.message);
