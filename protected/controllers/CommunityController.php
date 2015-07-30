@@ -22,11 +22,12 @@ class CommunityController extends BaseController
 		$community->lng=$userlocate->y;
 		$community->lat=$userlocate->x;
 		$community->type=1;
+		$community->communityid=uniqid("",true);
 		$community->des=$userlocate->nickname."的漂流伞";
 		if(!$community->save()){
 			Yii::log(CVarDumper::dumpAsString ( $community->errors ),'error','Community new save error');
 		}else {
-			BDLbs::createOrUpdate(intval($community->communityid),$community->des, $community->des, $community->lat, $community->lng,$type);
+			BDLbs::createOrUpdate(intval($community->id),$community->des, $community->des, $community->lat, $community->lng,$type);
 			return true;
 		}
 	}
