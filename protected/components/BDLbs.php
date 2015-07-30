@@ -37,13 +37,14 @@ class BDLbs extends Controller
 		$ret=Yii::app()->curl->get(Yii::app()->params['baiduapi'].$uri,$querystring_arrays);
 		echo $ret;
 	}
-	public static function createOrUpdate($id=0,$title,$address,$latitude,$longitude){
+	public static function createOrUpdate($id,$title,$address,$latitude,$longitude,$type='create'){
 		$querystring_arrays=array();
 		$uri='';
-		if(empty($id)){
+		if($type=='create'){
 			//这里是创建
 			$uri='/geodata/v3/poi/create';
 			$querystring_arrays=array(
+					'id'=>$id,
 					'title'=>$title,
 					'latitude'=>$latitude,
 					'longitude'=>$longitude,
