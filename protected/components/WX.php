@@ -126,11 +126,13 @@ class WX {
 		$urlpost="https://api.weixin.qq.com/cgi-bin/shorturl?access_token=$accesstoken";
 		$params=array('action'=>'long2short','long_url'=>$url);
 		$response = Yii::app ()->curl->post ( $urlpost,$params,'json' );
+		Yii::log ( $url ,'trace', 'GET short url' );
 		$response = json_decode ( $response, true );
+		Yii::log ( CVarDumper::dumpAsString ($response),'error', 'GET short url' );
 		if($response['errcode']==0){
 			return $response['short_url'];
 		}else{
-			Yii::log ( CVarDumper::dumpAsString ($response),'error', 'GET short url ERROR' );
+			return "";
 		}
 	}
 	public static function getTime(){

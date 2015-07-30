@@ -1,5 +1,5 @@
 <div class='text-center container-fluid' style='margin:50px 0px'>
-		<img id='imgumbrella' style='height:100px;margin:10px' alt='<?php echo $umbrella->des?>'src='<?php echo $umbrella->img?>!100X100' onclick='showImg("<?php echo $umbrella->img?>")'>
+		<img id='imgumbrella' style='height:200px;margin:10px' alt='<?php echo $umbrella->des?>'src='<?php echo $umbrella->img?>!200X200' onclick='showImg("<?php echo $umbrella->img?>")'>
 		<h4><?php echo $umbrella->des ?></h4>
 		<div class="row">
 			<h5><?php echo '伞币：'.round(floatval($umbrella->price),2) ?></h5>
