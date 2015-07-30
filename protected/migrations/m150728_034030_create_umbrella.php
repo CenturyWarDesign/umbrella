@@ -12,7 +12,7 @@ class m150728_034030_create_umbrella extends CDbMigration
 					'des' => 'string',
 					'img' => 'varchar(200)',
 					'price' => 'float',//10,20,30,40,50
-					'status' => 'int',//正常0，借出1，维修-1，超期-2，丢失-3，预约外借2,未审核-100，审核未通过-10
+					'status' => 'int default 0',//正常0，借出1，维修-1，超期-2，丢失-3，预约外借2,未审核-100，审核未通过-10
 					'create_at' => 'timestamp',
 					'update_at' => 'timestamp',
 				),
