@@ -129,6 +129,8 @@ class WX {
 		$response = json_decode ( $response, true );
 		if($response['errcode']==0){
 			return $response['short_url'];
+		}else{
+			Yii::log ( CVarDumper::dumpAsString ($response),'error', 'GET short url ERROR' );
 		}
 	}
 	public static function getTime(){
