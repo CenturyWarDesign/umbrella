@@ -104,8 +104,8 @@ class UmbrellaController extends BaseController
 			}
 			Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
 			$this->render('info',array('umbrella'=>$umbrella,
-					'create_user'=>$now_user,
-					'now_user'=>$create_user,
+					'create_user'=>$create_user,
+					'now_user'=>$now_user,
 					'url'=>$this->getUmbrellaUrl($umbrellaid),
 					'actions'=>$actions,'message'
 					));
@@ -165,7 +165,6 @@ class UmbrellaController extends BaseController
 		if(!$umbrella->save()){
 			$this->jsonReturn("unknow", CODE::ERROR);
 		}
-		
 		$this->jsonReturn("borrow ok", CODE::OK,array('newid'=>$umbrella->umbrellaid,'oldid'=>$umbrellaid));
 	}
 }

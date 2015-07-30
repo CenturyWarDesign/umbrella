@@ -33,4 +33,8 @@ wx.config({
     signature: '<?php echo $this->signPackage["signature"];?>',
     jsApiList: ['getLocation','openLocation','scanQRCode','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','chooseImage','previewImage','uploadImage','downloadImage','getNetworkType','hideOptionMenu','chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 });
+
+
+
+//30秒
 </script>

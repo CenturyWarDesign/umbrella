@@ -64,15 +64,12 @@ class WxController extends WxBaseController {
 				$this->returnText ( 'get x,y', $postObj );
 				break;
 			case 'CLICK' :
-				$user=User::model ()->findByAttributes(array('udid'=>$postObj->FromUserName));
-				if($user){
-					$user->x=floatval($postObj->Latitude);
-					$user->y=floatval($postObj->Longitude);
-					$user->locate=floatval($postObj->Precision);
-					$user->update_at=$this->getTime();
-					$user->save();
+				$keyvalue=$postObj->EventKey;
+				if($keyvalue=='TEM_COMMUNITY'){
+					//创建临时的网点
+					CommunityController::createOrUpdate($postObj->FromUserName);
 				}
-				$this->returnText ( 'get x,y', $postObj );
+				$this->returnText ( '创建临时网点成功', $postObj );
 				break;
 		}
 	}

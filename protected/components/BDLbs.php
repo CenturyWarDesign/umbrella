@@ -37,18 +37,44 @@ class BDLbs extends Controller
 		$ret=Yii::app()->curl->get(Yii::app()->params['baiduapi'].$uri,$querystring_arrays);
 		echo $ret;
 	}
-	public static function actionCreate(){
-		$uri='/geodata/v3/poi/create';
-		$querystring_arrays=array(
-				'title'=>'老万家',
-				'latitude'=>116.376269,
-				'longitude'=>39.946246,
-				'coord_type'=>1,
-				'geotable_id'=>114911,
-				'ak'=>MAP_AK,
-				'location'=>'116.376269,39.946246',
-				'q'=>'五道口'
-		);
+	public static function createOrUpdate($id=0,$title,$address,$latitude,$longitude){
+		$querystring_arrays=array();
+		$uri='';
+		if(empty($id)){
+			//这里是创建
+			$uri='/geodata/v3/poi/create';
+			$querystring_arrays=array(
+					'title'=>$title,
+					'latitude'=>$latitude,
+					'longitude'=>$longitude,
+					'coord_type'=>1,
+					'geotable_id'=>GEOTABLE_ID,
+					'ak'=>MAP_AK,
+			);
+		}else{
+			//这里是更新
+			$uri='/geodata/v3/poi/update';
+			$querystring_arrays=array(
+					'id'=>$id,
+					'title'=>$title,
+					'latitude'=>$latitude,
+					'longitude'=>$longitude,
+					'coord_type'=>1,
+					'geotable_id'=>GEOTABLE_ID,
+					'ak'=>MAP_AK,
+			);
+		}
+		$sn=BDLbs::caculateAKSN( $uri, $querystring_arrays);
+		$querystring_arrays['sn']=$sn;
+		$ret=Yii::app()->curl->post(Yii::app()->params['baiduapi'].$uri,$querystring_arrays);
+		$ret=json_decode($ret,true);
+		Yii::trace ( CVarDumper::dumpAsString ( $ret ), 'create or update baidu poi' );
+		if($ret['status']==0){
+			return $ret['id'];
+		}else{
+			Yii::log ( CVarDumper::dumpAsString ( $ret ),'error', 'create or update baidu poi ERROR' );
+			return -1;
+		}
 	}
 	
 	

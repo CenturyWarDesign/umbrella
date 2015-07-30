@@ -9,6 +9,7 @@ define('Encoding_Aes_Key2', '');
 
 define('MAP_AK', '');
 define('MAP_SN', '');
+define('GEOTABLE_ID', '114911');
 
 define('UPYUN_BUCKET', '');
 define('UPYUN_USER', '');
