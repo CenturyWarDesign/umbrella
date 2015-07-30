@@ -26,9 +26,12 @@ class UmbrellaController extends BaseController
 			if($model->validate())
 			{
 				$model->img=$this->updateWxImage($model->img);
-				$model->save();
+				if(!$model->save()){
+					Yii::log( CVarDumper::dumpAsString ($user->errors),'error',"Add umbrella save error");
+				}
 				// form inputs are valid, do something here
 				Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
+				
 				$this->render('addsuccess',array('umbrellaid'=>$model->umbrellaid,'status'=>'success'));
 				return;
 			}
@@ -40,31 +43,27 @@ class UmbrellaController extends BaseController
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/jquery-qrcode/jquery.qrcode.min.js');
 		$this->render('addsuccess',array('umbrellaid'=>uniqid('',true),'status'=>'success'));
 	}
-
-	// Uncomment the following methods and override them if needed
-	/*
-	public function filters()
-	{
-		// return the filter configuration for this controller, e.g.:
-		return array(
-			'inlineFilterName',
-			array(
-				'class'=>'path.to.FilterClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
+	
+	/**
+	 * 返回这个伞的状态
+	 */
+	public function actionId($umbrellaid=''){
+		$umbrellaid=empty($umbrellaid)?$_GET['id']:$umbrellaid;
+		if(empty($umbrellaid)){
+			echo "empty umbrellaid";
+			exit();
+		}
+		echo $this->getUmbrellaUrl($umbrellaid);
+		
 	}
-
-	public function actions()
-	{
-		// return external action classes, e.g.:
-		return array(
-			'action1'=>'path.to.ActionClass',
-			'action2'=>array(
-				'class'=>'path.to.AnotherActionClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
+	
+	private function getUmbrellaUrl($umbrellaid){
+		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
+		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/id/'.$umbrellaid);
+		$tem= sprintf($url,APP_ID,$umbrella);
+		return WX::getShortUrl($tem);
 	}
-	*/
+	
+	
+	
 }

@@ -76,13 +76,18 @@ class BaseController extends Controller
 		return date('Y-m-d H:i:s');
 	}
 	
+	/**
+	 * 把微信的图片上传到又拍云服务器上
+	 * @param string $medil
+	 * @return string
+	 */
 	public function updateWxImage($medil){
 		$accesstoken = WX::actionAccessToken ();
 		$imgurl = "https://api.weixin.qq.com/cgi-bin/media/get?access_token={$accesstoken}&media_id={$medil}";
 		$upyun = new UpYun ( UPYUN_BUCKET, UPYUN_USER, UPYUN_PASSWORD );
 		$fh = file_get_contents ( $imgurl );
 		if (empty ( $fh )) {
-			return false;
+			return "";
 		}
 		$md5=md5($this->openid);
 		$path="/".substr($md5, 0,4).'/'.$md5.'/'.$medil.'.jpg';
