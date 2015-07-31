@@ -16,6 +16,7 @@
 <body>
 
 <div class="container">
+<div id='msg'></div>
 	<?php echo $content; ?>
 </div>
 
@@ -35,6 +36,38 @@ wx.config({
 });
 
 
+
+var yunba = new Yunba({appkey: '<?php echo YUNBA_APPKEY;?>'});
+yunba.init(function (success) {
+	  if (success) {
+	 	 yunba.connect(function (success, msg) {
+	        if (success) {
+	            var alias='<?php echo $this->openid;?>';
+		       	 yunba.set_alias({'alias':alias }, function (data) {
+		             if (data.success) {
+					  	yunba.set_message_cb (function (data) {
+					  		getFromPush(data.msg)
+					    });
+		             } else {
+			             console.log(data);
+		             }
+		         })
+	        } else {
+	       	 	console.log(msg);
+	        }
+	      });
+	  }
+});
+
+function getFromPush(data){
+	var json = eval('(' + data + ')'); 
+	if(json.action=='borrowed'){
+		if(typeof(fborrowed) != 'undefined'){
+			fborrowed(json.umbrellaid);
+			console.log(json.action);
+		}
+	}
+}
 
 //30秒
 </script>

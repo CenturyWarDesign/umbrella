@@ -21,6 +21,10 @@ class BorrowController extends BaseController
 	public function actionBoundsearch(){
 		echo BDLbs::Bound();
 	}
+	public function actionTest(){
+		$this->pushUmbrellaBeBorred($this->openid, "55ba5f705cd0e4.20798321");
+	}
+	
 	// Uncomment the following methods and override them if needed
 	/*
 	public function filters()
