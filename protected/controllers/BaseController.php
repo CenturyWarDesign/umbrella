@@ -23,6 +23,10 @@ class BaseController extends Controller
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/bootstrap/css/bootstrap.css');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/bootstrap/js/bootstrap.min.js');
 		Yii::app()->clientScript->registerScriptFile("http://res.wx.qq.com/open/js/jweixin-1.0.0.js");
+
+		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/yunba/socket.io-1.3.5.min.js');
+		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/css/yunba/yunba-js-sdk.js');
+		
 		$this->signPackage=$this->getSignPackage();
 	}
 	
@@ -102,5 +106,28 @@ class BaseController extends Controller
 		$return=array('code'=>$code,'message'=>$message,'data'=>$data);
 		echo json_encode($return);
 		Yii::app()->end();
+	}
+	
+	/**
+	 * 某个玩家的伞被借走了
+	 * 
+	 * @param $openid unknown_type       	
+	 * @param $umbrella unknown_type       	
+	 */
+	public function pushUmbrellaBeBorred($openid, $umbrella) {
+		$params = array ('umbrellaid' => $umbrella,'action'=>'borrowed' );
+		$this->pushToOpenid ( $openid, $params );
+	}
+	
+	private function pushToOpenid($openid,$message=array()){
+		$array=array(
+				"method"=>'publish_to_alias',
+				"appkey"=>YUNBA_APPKEY,
+				"seckey"=>YUNBA_SECKEY,
+				"alias"=>$openid,
+				"msg"=>json_encode($message),
+				);
+		Yii::trace(CVarDumper::dumpAsString($array),'push to openid Value');
+		Yii::app()->curl->post('http://rest.yunba.io:8080',$array,'json');
 	}
 }

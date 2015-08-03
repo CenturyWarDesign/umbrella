@@ -1,4 +1,5 @@
 <div class='text-center container-fluid' style='margin:20px 0px'>
+<div class="alert alert-success" style='display:none' role="alert" id='info_alert'></div>
 		<img id='imgumbrella' style='height:200px;margin:10px' alt='<?php echo $umbrella->des?>'src='<?php echo $umbrella->img?>!200X200' onclick='showImg("<?php echo $umbrella->img?>")'>
 		<h4><?php echo $umbrella->des ?></h4>
 		<div class="row">
@@ -57,6 +58,7 @@ function qrcode(){
 	$('#myModal').modal({
 		  keyboard: true
 		})
+	$('#myModal').modal('show')
 	if($("#output").html()==""){
 		var width=Math.max($("#myModal .modal-dialog").width(),$("#myModal").width())-40;
 		jQuery('#output').qrcode({width:width,height:width,correctLevel:0,text:"<?php echo $url?>"}); 
@@ -86,4 +88,29 @@ function borrow(){
 	 },'json');
 }
 
+
+function fborrowed(umbrellaid){
+	var nowid='<?php echo $umbrella->umbrellaid;?>';
+	if(nowid==umbrellaid){
+		$('#myModal').modal('hide')
+		showmessageback(5);
+	}
+}
+
+function showmessageback(sec){
+	if(sec<0){
+		//判断是单次打开，还是扫码打开的
+		if(<?php echo isset($_GET['state'])&&$_GET['state']=='wxbutton'?true:false ?>){
+			wx.closeWindow();
+		}
+		else{
+			history.back();
+		}
+		return;
+	}
+	$("#info_alert").show();
+	$("#info_alert").html("已被借走，"+sec+"秒后返回");
+	sec=sec-1;
+	setTimeout("showmessageback("+sec+")",1000);
+}
 </script>

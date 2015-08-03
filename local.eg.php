@@ -20,4 +20,6 @@ define('UPYUN_CDN','http://umbrella.b0.upaiyun.com');
 
 define('WX_JS_DEBUG',false);
 
+define('YUNBA_APPKEY','');
+
 

@@ -168,7 +168,7 @@ class User extends CActiveRecord
 	{
 		return array(
 				'get_id'=>array(
-						'select' => 'id',
+						'select' => 'id,udid',
 				),
 				'get_locate'=>array(
 						'select' => 'nickname,x,y',
