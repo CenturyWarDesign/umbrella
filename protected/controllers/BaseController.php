@@ -116,7 +116,7 @@ class BaseController extends Controller
 	 */
 	public function pushUmbrellaBeBorred($user_id, $umbrella) {
 		$params = array ('umbrellaid' => $umbrella,'action'=>'borrowed' );
-		$this->pushToOpenid ( $user_id, $params );
+		$this->pushToUserid ( $user_id, $params );
 	}
 	
 	private function pushToUserid($user_id,$message=array()){
