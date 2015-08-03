@@ -109,7 +109,7 @@ function showmessageback(sec){
 		return;
 	}
 	$("#info_alert").show();
-	$("#info_alert").html("已被借走，"+sec+"秒后返回");
+	$("#info_alert").html("已被借走或收回，"+sec+"秒后返回");
 	sec=sec-1;
 	setTimeout("showmessageback("+sec+")",1000);
 }

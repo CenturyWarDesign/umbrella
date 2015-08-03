@@ -165,7 +165,7 @@ class UmbrellaController extends BaseController
 			$this->jsonReturn("unknow", CODE::ERROR);
 		}
 		
-		$this->pushUmbrellaBeBorred(UserIdentity::getUserOpenid($fromuserid) , $umbrellaid);
+		$this->pushUmbrellaBeBorred($fromuserid , $umbrellaid);
 		
 		$this->jsonReturn("borrow ok", CODE::OK,array('newid'=>$umbrella->umbrellaid,'oldid'=>$umbrellaid));
 	}

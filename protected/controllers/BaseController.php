@@ -114,17 +114,17 @@ class BaseController extends Controller
 	 * @param $openid unknown_type       	
 	 * @param $umbrella unknown_type       	
 	 */
-	public function pushUmbrellaBeBorred($openid, $umbrella) {
+	public function pushUmbrellaBeBorred($user_id, $umbrella) {
 		$params = array ('umbrellaid' => $umbrella,'action'=>'borrowed' );
-		$this->pushToOpenid ( $openid, $params );
+		$this->pushToOpenid ( $user_id, $params );
 	}
 	
-	private function pushToOpenid($openid,$message=array()){
+	private function pushToUserid($user_id,$message=array()){
 		$array=array(
 				"method"=>'publish_to_alias',
 				"appkey"=>YUNBA_APPKEY,
 				"seckey"=>YUNBA_SECKEY,
-				"alias"=>$openid,
+				"alias"=>$user_id,
 				"msg"=>json_encode($message),
 				);
 		Yii::trace(CVarDumper::dumpAsString($array),'push to openid Value');

@@ -42,7 +42,7 @@ yunba.init(function (success) {
 	  if (success) {
 	 	 yunba.connect(function (success, msg) {
 	        if (success) {
-	            var alias='<?php echo $this->openid;?>';
+	            var alias='<?php echo $this->user_id;?>';
 		       	 yunba.set_alias({'alias':alias }, function (data) {
 		             if (data.success) {
 					  	yunba.set_message_cb (function (data) {
