@@ -47,4 +47,11 @@ class UserIdentity extends CUserIdentity
 		}
 		return "";
 	}
+	public static function getUserOpenid($userid){
+		if (! empty ( $userid )) {
+			$user = User::model ()->get_id ()->findByPk ($userid);
+			return $user->udid;
+		}
+		return "";
+	}
 }
