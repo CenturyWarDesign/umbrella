@@ -100,7 +100,7 @@ function fborrowed(umbrellaid){
 function showmessageback(sec){
 	if(sec<0){
 		//判断是单次打开，还是扫码打开的
-		if(<?php echo isset($_GET['state'])&&$_GET['state']=='wxbutton'?true:false ?>){
+		if(<?php echo isset($_GET['state'])&&$_GET['state']=='wxbutton'?'true':'false' ?>){
 			wx.closeWindow();
 		}
 		else{
