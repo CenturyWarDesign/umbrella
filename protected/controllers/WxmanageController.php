@@ -11,7 +11,7 @@ class WxmanageController extends Controller
 		$appid= APP_ID;
 		$nearby=urlencode('http://umbrella.centurywar.cn/borrow/nearby');
 		$book=urlencode('http://umbrella.centurywar.cn/borrow/book');
-		$borrowlist=urlencode('http://umbrella.centurywar.cn/borrow/list');
+		$borrowlist=urlencode('http://umbrella.centurywar.cn/umbrella/list#borrowlist');
 		$umbrellalist=urlencode('http://umbrella.centurywar.cn/umbrella/list');
 		$umbrella=urlencode('http://umbrella.centurywar.cn/umbrella/id/wb2398479286519871.837486');
 		$url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=wxbutton#wechat_redirect";
