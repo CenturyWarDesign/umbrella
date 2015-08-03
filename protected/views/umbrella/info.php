@@ -58,6 +58,7 @@ function qrcode(){
 	$('#myModal').modal({
 		  keyboard: true
 		})
+	$('#myModal').modal('show')
 	if($("#output").html()==""){
 		var width=Math.max($("#myModal .modal-dialog").width(),$("#myModal").width())-40;
 		jQuery('#output').qrcode({width:width,height:width,correctLevel:0,text:"<?php echo $url?>"}); 
@@ -87,9 +88,11 @@ function borrow(){
 	 },'json');
 }
 
+
 function fborrowed(umbrellaid){
 	var nowid='<?php echo $umbrella->umbrellaid;?>';
 	if(nowid==umbrellaid){
+		$('#myModal').modal('hide')
 		showmessageback(5);
 	}
 }

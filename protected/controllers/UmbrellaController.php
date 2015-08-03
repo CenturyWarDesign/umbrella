@@ -156,7 +156,6 @@ class UmbrellaController extends BaseController
 		if(!$umblog->save()){
 			$this->jsonReturn("unknow", CODE::ERROR);
 		}
-		
 		//记录完成，要修改状态
 		$umbrella->now_userid=$this->user_id;
 		$umbrella->update_at=$this->getTime();
@@ -165,6 +164,9 @@ class UmbrellaController extends BaseController
 		if(!$umbrella->save()){
 			$this->jsonReturn("unknow", CODE::ERROR);
 		}
+		
+		$this->pushUmbrellaBeBorred($fromuserid, $umbrellaid);
+		
 		$this->jsonReturn("borrow ok", CODE::OK,array('newid'=>$umbrella->umbrellaid,'oldid'=>$umbrellaid));
 	}
 }

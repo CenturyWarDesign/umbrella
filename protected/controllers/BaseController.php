@@ -127,6 +127,7 @@ class BaseController extends Controller
 				"alias"=>$openid,
 				"msg"=>json_encode($message),
 				);
+		Yii::trace(CVarDumper::dumpAsString($array),'push to openid Value');
 		Yii::app()->curl->post('http://rest.yunba.io:8080',$array,'json');
 	}
 }
